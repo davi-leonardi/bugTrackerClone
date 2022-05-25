@@ -13,6 +13,8 @@ class Ticket(db.Model):
     name = db.Column(db.String(150), unique=True, nullable=False)
     description = db.Column(db.String(1000), nullable=False)
     status = db.Column(db.String(150), nullable=False)
+    priority = db.Column(db.String(150), nullable=False)
+    type = db.Column(db.String(150), nullable=False)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     owner = db.Column(db.Integer, db.ForeignKey('usr.id'))
 

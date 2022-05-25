@@ -108,6 +108,12 @@ a:hover {
   color: #563d7c;
 }  
 
+.form-control:focus-within,
+.form-control:focus{
+  border:1px solid #563d7c;
+  box-shadow: 0 0 10px #563d7c;
+}
+
 #homeImg{
   max-width: 160px;
   height: auto;
@@ -162,9 +168,8 @@ a:hover {
 
 .teamNav{
   width: 82%;
-  position: relative;
+  position: fixed;
   left: 320px;
-  height: 350px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
@@ -172,6 +177,31 @@ a:hover {
   position: fixed;
   left: 870px;
   width: 53%;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.ticketInfo{
+  position: fixed;
+  left: 320px;
+  width: 1570px;
+  height: auto;
+  top: 580px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.ticketInfoHeader{
+  position: relative;
+  width: 100%;
+  height: 40px;
+  padding: 12px 20px 12px 20px;
+}
+
+.ticketInfoBody{
+  position: relative;
+  width: 50%;
+  height: 200px;
+  margin: 10px 10px 10px 10px;
+  background-color: rgba(0,0,0,.05);
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
@@ -249,6 +279,10 @@ a:hover {
   top: 20px;
   right: 30px;
   color: aliceblue;
+}
+
+.badge-primary{
+  background-color: #79589f;
 }
 
 

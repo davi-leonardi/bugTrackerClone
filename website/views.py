@@ -97,6 +97,8 @@ def addTicket(id):
         name = request.form.get('name')
         description = request.form.get('description')
         status = request.form.get('status')
+        priority = request.form.get('priority')
+        type = request.form.get('type')
         owner = current_user.id
 
         tck = Ticket.query.filter_by(name=name).first()
@@ -104,12 +106,12 @@ def addTicket(id):
         if tck:
             flash("A ticket with the same name already exists!", category="error")
         else:
-            if(len(name) > 30 or len(name) < 2):
+            if(len(name) > 40 or len(name) < 2):
                 flash("Invalid name", category="error")
             elif(len(description) > 1000):
                 flash("Description is too long!", category="error")
             else:
-                new_tck = Ticket(name=name, description=description, status=status, project_id=id, owner=owner)
+                new_tck = Ticket(name=name, description=description, status=status, priority=priority, type=type, project_id=id, owner=owner)
                 db.session.add(new_tck)
                 db.session.commit()
                 flash("Ticket has been created!", category="success")
@@ -125,7 +127,7 @@ def deleteTicket(id):
         if tck:
             db.session.delete(tck)
             db.session.commit()
-            flash("Member deleted!", category="success")
+            flash("Member deleted!", category="error")
 
     return redirect(url_for("views.project", id=id))
 
