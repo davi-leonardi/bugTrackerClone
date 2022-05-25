@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="../static/style.css" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %} {% if category ==
+      'error' %}
+      <div class="alert alert-danger alter-dismissable fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% else %}
+      <div class="alert alert-success alter-dismissable fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endif %} {% endfor %} {% endif %} {% endwith %}
+
+      <div class="p-3 mb-5 bg-light rounded" id="regDiv">
+        </br>
+        <div style="text-align: center;">
+            <img class="navbar-brand-img" src="../static/images/bug2.png">
+        </div>
+        </br>
+        <form method="POST">
+            <div class="input-group">
+                <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Full name">
+            </div>
+            <div class="input-group">
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email" />
+            </div>
+            <div class="input-group">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password1"
+                  name="password1"
+                  placeholder="Password"
+                />
+            </div>
+            <div class="input-group" style="margin-bottom: 0px;">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password2"
+                  name="password2"
+                  placeholder="Confirm password"
+                />
+            </div>
+            <div style="margin-left: 30px;margin-right: 30px;" >
+                <button type="submit" id="formButton" class="my-4 btn btn-primary">Register</button>
+                <a href="/login" id="loginA">Login</a>
+            </div>
+        </form>
+      </div>
+      <div id="designedBy">
+        <span>
+          © 2022 - <a  id="footerName" href="">Davi Leonardi</a>
+        </span>
+      </div>
+  </body>
+</html>

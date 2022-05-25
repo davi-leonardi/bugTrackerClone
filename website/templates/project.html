@@ -1,0 +1,390 @@
+{% extends "base.html" %} {% block title %}Project{% endblock %} {% block
+content %}
+
+<div id="userLogged">
+  <span>Logged as: <strong>{{current_user.full_name}}</strong></span>
+</div>
+
+<div
+  class="modal"
+  id="descModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Project Description</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+        <span aria-hidden="true">&times;</span>
+      </div>
+      <div class="modal-body">{{this_project.description}}</div>
+      <div class="modal-footer"></div>
+    </div>
+  </div>
+</div>
+
+<div id="pageTitle">
+  {{this_project.name}}
+  <a
+    class="bi bi-info-circle-fill"
+    id="infoButton"
+    data-toggle="modal"
+    data-target="#descModal"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      fill="currentColor"
+      class="bi bi-info-circle-fill"
+      viewBox="0 0 16 16"
+    >
+      <path
+        d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"
+      />
+    </svg>
+  </a>
+</div>
+
+<div
+  class="modal"
+  id="NewTeamMemModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Team Member</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/project/{{this_project.id}}/addTeamMem" method="POST">
+          <div class="formrow">
+            <div class="form-group">
+              <label for="team" class="">Available Team Members</label>
+              <select multiple name="team" id="team" class="form-control">
+                {% for u in freeUsers %}
+                <option value="{{u.id}}">{{u.full_name}}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="newTicketModal" tabindex="-1" role="dialog" aria-labelledby="newTicketModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Create New ticket</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/project/{{this_project.id}}/addTicket" method="POST">
+            <div class="formrow">
+                <div class="form-group">
+                  <label for="name" class="lease-form-label mandatory-entry">Ticket Name</label>
+                  <input id="name" name="name" placeholder="Enter Ticket Name" type="text" class="lease-form-input form-control" value="">
+                </div>
+            </div>
+            <div class="formrow">
+                <div class="form-group">
+                  <label for="description" class="">Ticket Description</label>
+                  <textarea name="description" id="description" placeholder="Enter description" rows="5" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="formrow">
+              <div class="form-group">
+                  <label for="status" class="">Choose Status</label>
+                  <select name="status" id="status" class="form-control">      
+                      <option>Open</option>
+                      <option>In-Progress</option>
+                      <option>Closed</option>            
+                  </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-success">Add Ticket</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="modal" tabindex="-1" id="rmMemModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Removal confirmation</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Do you really want to remove this team member?</p>
+        <p id="modal_body"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Cancel
+        </button>
+        <form action="/project/{{this_project.id}}/deleteTeamMem" method="POST">
+          <input type="hidden" name="memId" id="memId">
+          <button type="submit" class="btn btn-danger" id="removeConfirm" name="removeConfirm">
+          Remove
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="bg-white rounded teamnav">
+      <div class="border-0 card-header">
+        <div class="align-items-center row" style="width: 500px">
+          <div class="col">
+            <h3 class="mb-0" style="font-size: 20px">Team</h3>
+          </div>
+          <div class="col">
+            <div class="col text-right">
+              <button
+                type="button"
+                style="font-size: 15px"
+                class="btn btn-success"
+                data-toggle="modal"
+                data-target="#NewTeamMemModal"
+              >
+                New Member
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="table-responsive" style="max-height: 300px;">
+        <table class="align-items-center table-flush table">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for m in this_project.usrs %}
+            <tr class="teamRow">
+              <th>
+                <div class="media">{{m.full_name}}</div>
+              </th>
+              <td>{{m.email}}</td>
+              <td class="text-right">
+                <form
+                  action="/project/{{this_project.id}}/deleteTeamMem"
+                  method="post"
+                >
+                  <input
+                    type="hidden"
+                    id="memId"
+                    name="memId"
+                    value="{{m.id}}"
+                  />
+                  {% if m.id == this_project.owner %}
+                  <button type="submit" class="btn-close" disabled aria-label="Close">
+                  {% else %}
+                  <button type="submit" class="btn-close" aria-label="Close">
+                  {% endif %}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-x-lg"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"
+                      />
+                    </svg>
+                  </button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer">
+        <span>
+          Project manager: {% for i in usernames %}{% if i.id ==
+          this_project.owner %}<strong>{{i.full_name}}</strong>{% endif %}{%
+          endfor %}
+        </span>
+      </div>
+    </div>
+    <div class="bg-white rounded ticketdiv">
+      <div class="shadow card">
+        <div class="card-header">
+          <div class="align-items-center row">
+            <div class="col">
+              <h3 class="mb-0" style="font-size: 20px">Tickets</h3>
+            </div>
+            <div class="col">
+              <div class="col text-right">
+                <button
+                  type="button"
+                  style="font-size: 15px"
+                  class="btn btn-success"
+                  data-toggle="modal"
+                  data-target="#newTicketModal"
+                >
+                  New Ticket
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive" style="max-height: 300px;">
+          <table class="align-items-center table-flush table">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Ticket Title</th>
+                <th scope="col">Description</th>
+                <th scope="col">Ticket Author</th>
+                <th scope="col">Status</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for t in this_project.tickets %}
+              <tr>
+                <th scope="row">
+                    <a href="#">
+                        <div class="media">
+                            <span>{{t.name}}</span>
+                        </div>
+                    </a>
+                </th>
+                <td style="white-space: unset; overflow-wrap: break-word; max-width: 20px;">
+                    <span>{{t.description}}</span>
+                </td>
+                <td>
+                    <div class="row" style="padding-left: 20px;">
+                      {% for u in usernames %} {% if u.id == t.owner %}
+                        <span>{{u.full_name}}</span>
+                      {% endif %}{% endfor %}
+                    </div>
+                </td>
+                <td>
+                    <div class="row" style="padding-left: 20px;">
+                        <span>
+                            {% if t.status == 'Open' %}
+                            <span class="dot" style="background-color:green ;"></span>
+                            Open
+                            {% elif t.status == 'In-Progress' %}
+                            <span class="dot" style="background-color:blue ;"></span>
+                             In-Progress
+                            {% elif t.status == 'Closed' %}
+                            <span class="dot" style="background-color:red ;"></span>
+                            Closed
+                            {% endif %}
+                        </span>
+                    </div>
+                </td>
+                <td class="text-right">
+                  <form
+                  action="/project/{{this_project.id}}/deleteTicket"
+                  method="post"
+                  >
+                  <input
+                    type="hidden"
+                    id="tckId"
+                    name="tckId"
+                    value="{{t.id}}"
+                  />
+                  <button type="submit" class="btn-close" aria-label="Close">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-x-lg"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"
+                      />
+                    </svg>
+                  </button>
+                </form>
+                </td>
+            </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer">
+          <span>
+            Number of Tickets:
+            <strong></strong>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script
+  src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+  integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+  crossorigin="anonymous"
+></script>
+
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+  crossorigin="anonymous"
+></script>
+
+<!-- <script type="text/javascript">
+  $(".btn-close").click(() => {
+    var text = $(this).val();
+    $("#modal_body").html(text);
+
+
+  });
+</script> -->
+
+{% endblock %}
