@@ -1,6 +1,7 @@
 from flask import flash, redirect, render_template, Blueprint, request, url_for
 from flask_login import current_user, login_required
 from sqlalchemy import true
+import json
 
 from .models import Project, Ticket, Usr, association_table
 from . import io, db
@@ -10,6 +11,7 @@ views = Blueprint('views', __name__)
 @views.route('/', methods=['POST', 'GET'])
 @login_required
 def home():
+
     if request.method == 'POST':
         name = request.form.get("name")
         description = request.form.get("description")
@@ -108,7 +110,7 @@ def addTicket(id):
         else:
             if(len(name) > 40 or len(name) < 2):
                 flash("Invalid name", category="error")
-            elif(len(description) > 1000):
+            elif(len(description) > 500):
                 flash("Description is too long!", category="error")
             else:
                 new_tck = Ticket(name=name, description=description, status=status, priority=priority, type=type, project_id=id, owner=owner)
@@ -132,6 +134,26 @@ def deleteTicket(id):
     return redirect(url_for("views.project", id=id))
 
 @io.on('userConnected')
-def userConnected(msg):
-    io.send(msg)
+def handle_message(data):
+    print('received message: ' + str(data))
+    io.send('Message received: ' + str(data))
+
+@io.on('displayTicketInfo')
+def handle_ticket_info(id):
+    tck = Ticket.query.get(id)
+    tckOwner = Usr.query.get(tck.owner)
+
+    data = {
+    'tckName' : tck.name,
+    'tckDesc' : tck.description,
+    'tckStatus' : tck.status,
+    'tckPriority' : tck.priority,
+    'tckType' : tck.type,
+    'tckAuthor' : tckOwner.full_name
+    }
+
+    jsonData = json.dumps(data)
+    io.emit('handleTicketInfo', jsonData, json=True)
+
+
     

@@ -315,7 +315,7 @@ content %}
               {% for t in this_project.tickets %}
               <tr>
                 <th scope="row">
-                    <a href="#" onclick="displayTicketInfo('{{t.name}}')">
+                    <a href="#" onclick="displayTicketInfo('{{t.id}}')">
                         <div class="media">
                             <span>{{t.name}}</span>
                         </div>
@@ -408,7 +408,7 @@ content %}
         </div>
         <div class="col-md-3">
           <h6 class="text-muted text-uppercase">Description</h6>
-          <p id="desc" name="desc"></p>
+          <p id="desc" name="desc" style="height: 100px;"></p>
         </div>
         <div class="col-md-3">
           <h6 class="text-muted text-uppercase"></h6>
@@ -423,26 +423,26 @@ content %}
           </button>
         </div>
       </div>
-        <div class="mb-2 row">
+      <div class="mb-2 row">
             <div class="col-3 col-sm-3 col-md-3">
               <h6 class="text-muted text-uppercase">Status</h6>
-              <span class="mr-1 mb-2 badge badge-primary badge-pill" id="status" name="status"></span>
+              <span id="tckStatus" name="tckStatus"></span>
             </div>
             <div class="col-3 col-sm-3 col-md-3">
               <h6 class="text-muted text-uppercase">Priority</h6>
-              <span class="mr-1 mb-2 badge badge-primary badge-pill" id="priority" name="priority"></span>
+              <span id="tckPriority" name="tckPriority"></span>
             </div>
             <div class="col-3 col-sm-3 col-md-3">
               <h6 class="text-muted text-uppercase">Type</h6>
-              <span class="mr-1 mb-2 badge badge-primary badge-pill" id="type" name="type"></span>
+              <span class="mr-1 mb-2 badge badge-primary badge-pill" id="tckType" name="tckType"></span>
             </div>
             <div class="col-md-3">
               <h6 class="text-muted text-uppercase">Time Estimate (Hours)</h6>
               <span>2</span>
             </div>
-          </div>
-          </div>
-        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script
@@ -457,16 +457,47 @@ content %}
   crossorigin="anonymous"
 ></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
 <script type="text/javascript">
-  function displayTicketInfo(tckName, tckDesc, tckAuthor, tckStatus, tckPriority, tckType){
-    console.log(tckName);
+  var socket = io()
+  socket.on('displayTicketInfo')
+  function displayTicketInfo(id){
+    console.log(id);
+    socket.emit('displayTicketInfo', id);
   }
-  // $("").click(() => {
-  //   var text = $(this).val();
-  //   $("#modal_body").html(text);
 
+  socket.on('handleTicketInfo', (data) => {
+    ticket = JSON.parse(data);
+    $('#tckName').html(ticket.tckName);
+    $('#author').html(ticket.tckAuthor);
+    $('#desc').html(ticket.tckDesc);
 
-  // });
+    switch(ticket.tckStatus){
+      case 'Open':
+        $('#tckStatus').html("<span class='badge rounded-pill bg-success text-white'>Open</span>");
+        break;
+      case 'In-Progress':
+        $('#tckStatus').html("<span class='badge rounded-pill bg-primary text-white'>In-Progress</span>");
+        break;
+      default:
+        $('#tckStatus').html("<span class='badge rounded-pill bg-danger text-white'>Closed</span>");
+        break;
+    }
+
+    switch(ticket.tckPriority){
+      case 'Low':
+        $('#tckPriority').html("<span class='badge rounded-pill bg-success text-white'>Low</span>");
+        break;
+      case 'Medium':
+        $('#tckPriority').html("<span class='badge rounded-pill bg-warning text-dark'>Medium</span>");
+        break;
+      default:
+        $('#tckPriority').html("<span class='badge rounded-pill bg-danger text-white'>High</span>");
+        break;
+    }
+    
+    $('#tckType').html(ticket.tckType);
+  })
 </script>
 
 {% endblock %}
