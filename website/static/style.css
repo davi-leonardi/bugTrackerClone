@@ -110,7 +110,7 @@ a:hover {
 
 .form-control:focus-within,
 .form-control:focus{
-  border:1px solid #563d7c;
+  border:1px solid #563d7c; 
   box-shadow: 0 0 10px #563d7c;
 }
 
@@ -284,3 +284,18 @@ a:hover {
 .badge-primary{
   background-color: #79589f;
 }
+
+#TicketInfoButton{
+  background-color: transparent;
+  border-color: transparent;
+  color: gray;
+}
+
+#TicketInfoButton:hover{
+  color: rgb(86, 85, 85);
+}
+
+#ticketInfoPlaceholder{
+  padding: 0px 10px 10px 10px;
+}
+
