@@ -1,6 +1,5 @@
 from flask import flash, redirect, render_template, Blueprint, request, url_for
 from flask_login import current_user, login_required
-from sqlalchemy import true
 import json
 
 from .models import Project, Ticket, Usr, association_table
@@ -54,6 +53,7 @@ def project(id):
     users = Usr.query.all()
     freeUsers = []
     assignedUsers = []
+    numOfTickets = 0
 
     for c in this_project.usrs:
         assignedUsers.append(c.id);
@@ -62,7 +62,10 @@ def project(id):
         if(u.id not in assignedUsers):
             freeUsers.append(u)
     
-    return render_template("project.html", this_project=this_project, usernames=users, freeUsers=freeUsers)
+    for n in this_project.tickets:
+        numOfTickets += 1
+    
+    return render_template("project.html", this_project=this_project, usernames=users, freeUsers=freeUsers, numOfTickets=numOfTickets)
 
 @views.route('/project/<int:id>/addTeamMem', methods=['POST', 'GET'])
 @login_required
@@ -96,7 +99,7 @@ def deleteTeamMem(id):
 @login_required
 def addTicket(id):
     if request.method == 'POST':
-        name = request.form.get('name')
+        name = request.form.get('ticketname')
         description = request.form.get('description')
         status = request.form.get('status')
         priority = request.form.get('priority')
@@ -129,8 +132,22 @@ def deleteTicket(id):
         if tck:
             db.session.delete(tck)
             db.session.commit()
-            flash("Member deleted!", category="error")
+            flash("Ticket deleted!", category="success")
 
+    return redirect(url_for("views.project", id=id))
+
+@views.route('/project/<int:id>/updateProjMan', methods=['POST'])
+@login_required
+def updateProjMan(id):
+    if request.method == 'POST':
+        newProjMan = request.form.get("team")
+        prj = Project.query.filter_by(id=id).first()
+
+        if prj:
+            prj.owner = newProjMan
+            db.session.commit()
+            flash("Project Manager Changed!", category="success")
+    
     return redirect(url_for("views.project", id=id))
 
 @io.on('userConnected')

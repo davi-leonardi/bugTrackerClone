@@ -299,3 +299,10 @@ a:hover {
   padding: 0px 10px 10px 10px;
 }
 
+#pencilEditIcon{
+  color: gray;
+}
+
+#pencilEditIcon:hover{
+  color: rgb(86, 85, 85);
+}

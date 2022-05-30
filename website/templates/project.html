@@ -61,6 +61,48 @@ content %}
   </div>
 </div>
 
+<div
+  class="modal"
+  id="editProjManModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Change Project Manager</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/project/{{this_project.id}}/updateProjMan" method="POST">
+          <div class="formrow">
+            <div class="form-group">
+              <label for="team" class="">Available Team Members</label>
+              <select name="team" id="team" class="form-control">
+                {% for u in this_project.usrs %}{% if u.id != this_project.owner
+                %}
+                <option value="{{u.id}}">{{u.full_name}}</option>
+                {% endif %}{% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="pageTitle">
   {{this_project.name}}
   <a
@@ -342,6 +384,31 @@ content %}
           this_project.owner %}<strong>{{i.full_name}}</strong>{% endif %}{%
           endfor %}
         </span>
+        <a
+          class="bi bi-info-circle-fill"
+          id="editProjMan"
+          data-toggle="modal"
+          data-target="#editProjManModal"
+        >
+          <i class="bi bi-pencil-square" id="pencilEditIcon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-pencil-square"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+              />
+              <path
+                fill-rule="evenodd"
+                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+              />
+            </svg>
+          </i>
+        </a>
       </div>
     </div>
     <div class="bg-white rounded ticketdiv">
@@ -455,7 +522,7 @@ content %}
         <div class="card-footer">
           <span>
             Number of Tickets:
-            <strong></strong>
+            <strong>{{numOfTickets}}</strong>
           </span>
         </div>
       </div>
@@ -465,111 +532,122 @@ content %}
 
 <div class="bg-white rounded ticketInfo">
   <div class="rounded ticketInfoHeader">
-    <h3 class="mb-0" style="font-size: 20px">Ticket Info</h3>
+    <h3 class="mb-0 col-md-6" style="font-size: 20px;display: inline-block;">Ticket Info</h3>
+    <h3 class="mb-0 col-md-3" id="chatTitle" style="font-size: 20px;display: none;">Chat</h3>
   </div>
   <hr class="my-3" />
   <div id="ticketInfoPlaceholder">
     <span>No Ticket Selected</span>
   </div>
-  <div
-    class="mt-3 col-xl-6"
-    id="ticketInfoContent"
-    style="padding-bottom: 15px; height: 267px; display: none"
-  >
-    <div class="shadow p-4 card" style="height: 250px">
-      <div class="mb-2 row">
-        <div class="col-md-3">
-          <h6 class="text-muted text-uppercase">Ticket Name</h6>
-          <h2
-            class="mb-1"
-            style="color: #79589f; font-size: 1.5rem; overflow: hidden"
-            id="tckName"
-          ></h2>
-        </div>
-        <div class="col-md-3">
-          <h6 class="text-muted text-uppercase">Author</h6>
-          <p color="primary" class="mb-3" id="author" name="author"></p>
-        </div>
-        <div class="col-md-3">
-          <h6 class="text-muted text-uppercase">
-            Description
-            <a
-              class="bi bi-info-circle-fill"
-              id="TicketInfoButton"
-              data-toggle="modal"
-              data-target="#TicketDescModal"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
+  <div class="row" style="margin: 0px 10px 0px 10px;">
+    <div
+      class="mt-3 col-xl-6"
+      id="ticketInfoContent"
+      style="padding-bottom: 0px; height: 267px; display: none"
+    >
+      <div class="shadow p-4 card" style="height: 250px">
+        <div class="mb-2 row">
+          <div class="col-md-3">
+            <h6 class="text-muted text-uppercase">Ticket Name</h6>
+            <h2
+              class="mb-1"
+              style="color: #79589f; font-size: 1.5rem; overflow: hidden"
+              id="tckName"
+            ></h2>
+          </div>
+          <div class="col-md-3">
+            <h6 class="text-muted text-uppercase">Author</h6>
+            <p color="primary" class="mb-3" id="author" name="author"></p>
+          </div>
+          <div class="col-md-3">
+            <h6 class="text-muted text-uppercase">
+              Description
+              <a
                 class="bi bi-info-circle-fill"
-                viewBox="0 0 16 16"
+                id="TicketInfoButton"
+                data-toggle="modal"
+                data-target="#TicketDescModal"
               >
-                <path
-                  d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"
-                />
-              </svg>
-            </a>
-          </h6>
-          <p id="desc" name="desc" style="height: 100px; overflow: hidden"></p>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-info-circle-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"
+                  />
+                </svg>
+              </a>
+            </h6>
+            <p
+              id="desc"
+              name="desc"
+              style="height: 100px; overflow: hidden"
+            ></p>
+          </div>
+          <div class="col-md-3">
+            <h6 class="text-muted text-uppercase"></h6>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="editTicketModal"
+              data-toggle="modal"
+              data-target="#ticketModal"
+            >
+              <i class="bi bi-pencil-square">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-pencil-square"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                  />
+                </svg>
+              </i>
+              Edit...
+            </button>
+          </div>
         </div>
-        <div class="col-md-3">
-          <h6 class="text-muted text-uppercase"></h6>
-          <button
-            type="button"
-            class="btn btn-secondary"
-            id="editTicketModal"
-            data-toggle="modal"
-            data-target="#ticketModal"
-          >
-            <i class="bi bi-pencil-square">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                class="bi bi-pencil-square"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
-                />
-                <path
-                  fill-rule="evenodd"
-                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
-                />
-              </svg>
-            </i>
-            Edit...
-          </button>
-        </div>
-      </div>
-      <div class="mb-2 row">
-        <div class="col-3 col-sm-3 col-md-3">
-          <h6 class="text-muted text-uppercase">Status</h6>
-          <span id="tckStatus" name="tckStatus"></span>
-        </div>
-        <div class="col-3 col-sm-3 col-md-3">
-          <h6 class="text-muted text-uppercase">Priority</h6>
-          <span id="tckPriority" name="tckPriority"></span>
-        </div>
-        <div class="col-3 col-sm-3 col-md-3">
-          <h6 class="text-muted text-uppercase">Type</h6>
-          <span
-            class="mr-1 mb-2 badge badge-primary badge-pill"
-            id="tckType"
-            name="tckType"
-          ></span>
-        </div>
-        <div class="col-md-3">
-          <h6 class="text-muted text-uppercase">Time Estimate (Hours)</h6>
-          <span>2</span>
+        <div class="mb-2 row">
+          <div class="col-3 col-sm-3 col-md-3">
+            <h6 class="text-muted text-uppercase">Status</h6>
+            <span id="tckStatus" name="tckStatus"></span>
+          </div>
+          <div class="col-3 col-sm-3 col-md-3">
+            <h6 class="text-muted text-uppercase">Priority</h6>
+            <span id="tckPriority" name="tckPriority"></span>
+          </div>
+          <div class="col-3 col-sm-3 col-md-3">
+            <h6 class="text-muted text-uppercase">Type</h6>
+            <span
+              class="mr-1 mb-2 badge badge-primary badge-pill"
+              id="tckType"
+              name="tckType"
+            ></span>
+          </div>
+          <div class="col-md-3">
+            <h6 class="text-muted text-uppercase">Time Estimate (Hours)</h6>
+            <span>2</span>
+          </div>
         </div>
       </div>
     </div>
+    <div class="mt-3 col-xl-6" id="chatContent" style="display: none;">
+      <div class="shadow p-4 card" style="height: 250px;">Hello there</div>
+    </div>
   </div>
+  
 </div>
 
 <script
@@ -643,6 +721,9 @@ content %}
 
     document.getElementById("ticketInfoPlaceholder").style.display = "none";
     document.getElementById("ticketInfoContent").style.display = "block";
+    document.getElementById("chatContent").style.display = "block";
+    document.getElementById("chatTitle").style.display = "inline-block";
+
   });
 
   $("#addNewTicketModal").click(() => {

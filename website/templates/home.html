@@ -1,133 +1,168 @@
-{% extends "base.html" %}
-{% block title %}Home{% endblock %}
-{% block content %}
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
 
 <div id="userLogged">
-    <span>Logged as: <strong>{{current_user.full_name}}</strong></span>
+  <span>Logged as: <strong>{{current_user.full_name}}</strong></span>
 </div>
 
 <div id="pageTitle">DASHBOARD</div>
 
-    <div class="modal fade" id="NewPrjModal" tabindex="-1" role="dialog"  aria-labelledby="NewPrjModalTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Create new project</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form action="/" method="POST">
-                  <div class="formrow">
-                      <div class="form-group">
-                        <label for="name" class="lease-form-label mandatory-entry">Project Name</label>
-                        <input id="name" name="name" placeholder="Enter project name" type="text" class="lease-form-input form-control" value="">
-                      </div>
-                  </div>
-                  <div class="formrow">
-                      <div class="form-group">
-                        <label for="description" class="">Project Description</label>
-                        <textarea name="description" id="description" placeholder="Enter description" rows="5" class="form-control"></textarea>
-                      </div>
-                  </div>
-                  <div class="formrow">
-                    <div class="form-group">
-                        <label for="team" class="">Add Team Members</label>
-                        <select multiple name="team" id="team" class="form-control">
-                            {% for u in usernames %}
-                            {% if u.id != user.id %}
-                            <option value="{{u.id}}">{{u.full_name}}</option>
-                            {% endif %}
-                            {% endfor %}
-                        </select>
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">Add project</button>
-                  </div>
-              </form>
+<div
+  class="modal fade"
+  id="NewPrjModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="NewPrjModalTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">
+          Create new project
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/" method="POST">
+          <div class="formrow">
+            <div class="form-group">
+              <label for="name" class="lease-form-label mandatory-entry"
+                >Project Name</label
+              >
+              <input
+                id="name"
+                name="name"
+                placeholder="Enter project name"
+                type="text"
+                class="lease-form-input form-control"
+                value=""
+              />
             </div>
           </div>
-        </div>
-    </div>
-
-    <div class="bg-white rounded mainnav">
-        <div class="border-0 card-header">
-            <div class="ml-2 align-items-center row">
-                <h4 class="mb-0">Projects</h4>
-                <div class="col text-right">
-                    <button type="button" class="btn btn-success" id="newPrj" data-toggle="modal" data-target="#NewPrjModal">New Project</button>
-                </div>
+          <div class="formrow">
+            <div class="form-group">
+              <label for="description" class="">Project Description</label>
+              <textarea
+                name="description"
+                id="description"
+                placeholder="Enter description"
+                rows="5"
+                class="form-control"
+              ></textarea>
             </div>
+          </div>
+          <div class="formrow">
+            <div class="form-group">
+              <label for="team" class="">Add Team Members</label>
+              <select multiple name="team" id="team" class="form-control">
+                {% for u in usernames %} {% if u.id != user.id %}
+                <option value="{{u.id}}">{{u.full_name}}</option>
+                {% endif %} {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Add project</button>
+          </div>
+        </form>
+      </div>
     </div>
-
-
-    <table class="align-items-center table-flush table">
-        <thead class="thead-light">
-            <tr>
-                <th scope="col">Project</th>
-                <th scope="col">Description</th>
-                <th scope="col">Manager</th>
-                <th scope="col">Creation date</th>
-                <th scope="col">Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for p in projects %}
-            <tr>
-                <th scope="row">
-                    <a href="/project/{{p.id}}">
-                        <div class="media">
-                            <span>{{p.name}}</span>
-                        </div>
-                    </a>
-                </th>
-                <td style="white-space: unset; overflow-wrap: break-word;">
-                    <span>{{p.description}}</span>
-                </td>
-                <td>
-                    <div class="row">
-                        {% for x in usernames%}{% if x.id == p.owner %}
-                        <span>{{x.full_name}}</span>
-                        {% endif %}{% endfor %}
-                    </div>
-                </td>
-                <td>
-                    <div class="row">
-                        <span>{{p.creation_date.strftime("%b %d, %Y at %H:%M")}}</span>
-                    </div>
-                </td>
-                <td>
-                    <div class="row">
-                        <span>
-                            {% if p.status == True %}
-                            <span class="dot" style="background-color:green ;"></span>
-                             In-Progress
-                             {% else %}
-                             <span class="dot" style="background-color:red ;"></span>
-                             Completed
-                             {% endif %}
-                        </span>
-                    </div>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
+  </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
-<script type="text/javascript" charset="utf-8">
-    var socket = io();
-    socket.on('connect', () => {                           //called when the socket is connected
-        socket.emit('userConnected', {username: 'Davi Leonardi'});
-    });
+<div class="bg-white rounded mainnav">
+  <div class="border-0 card-header">
+    <div class="ml-2 align-items-center row">
+      <h4 class="mb-0">Projects</h4>
+      <div class="col text-right">
+        <button
+          type="button"
+          class="btn btn-success"
+          id="newPrj"
+          data-toggle="modal"
+          data-target="#NewPrjModal"
+        >
+          New Project
+        </button>
+      </div>
+    </div>
+  </div>
 
-    socket.on('message', (data) => {
-        console.log(data);
-    })
+  <table class="align-items-center table-flush table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Project</th>
+        <th scope="col">Description</th>
+        <th scope="col">Manager</th>
+        <th scope="col">Creation date</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in projects %}
+      <tr>
+        <th scope="row">
+          <a href="/project/{{p.id}}">
+            <div class="media">
+              <span>{{p.name}}</span>
+            </div>
+          </a>
+        </th>
+        <td style="white-space: unset; overflow-wrap: break-word">
+          <span>{{p.description}}</span>
+        </td>
+        <td>
+          <div class="row">
+            {% for x in usernames%}{% if x.id == p.owner %}
+            <span>{{x.full_name}}</span>
+            {% endif %}{% endfor %}
+          </div>
+        </td>
+        <td>
+          <div class="row">
+            <span>{{p.creation_date.strftime("%b %d, %Y at %H:%M")}}</span>
+          </div>
+        </td>
+        <td>
+          <div class="row">
+            <span>
+              {% if p.status == True %}
+              <span class="dot" style="background-color: green"></span>
+              In-Progress {% else %}
+              <span class="dot" style="background-color: red"></span>
+              Completed {% endif %}
+            </span>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+  integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+  crossorigin="anonymous"
+></script>
+<script type="text/javascript" charset="utf-8">
+  var socket = io();
+  socket.on("connect", () => {
+    //called when the socket is connected
+    socket.emit("userConnected", { username: "Davi Leonardi" });
+  });
+
+  socket.on("message", (data) => {
+    console.log(data);
+  });
 </script>
 
 {% endblock %}
