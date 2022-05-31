@@ -17,6 +17,7 @@ class Ticket(db.Model):
     type = db.Column(db.String(150), nullable=False)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     owner = db.Column(db.Integer, db.ForeignKey('usr.id'))
+    messages = db.relationship('Chat')
 
 class Usr(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -25,6 +26,7 @@ class Usr(db.Model, UserMixin):
     password = db.Column(db.String(150), nullable=False)
     projects = db.relationship('Project', secondary=association_table, lazy='subquery', backref=db.backref('usrs', lazy=True))
     tickets = db.relationship('Ticket')
+    messages = db.relationship('Chat')
 
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -33,6 +35,16 @@ class Project(db.Model):
     creation_date = db.Column(db.DateTime(timezone=True), server_default=func.now())
     status = db.Column(db.Boolean, nullable=False)
     tickets = db.relationship('Ticket')
+    messages = db.relationship('Chat')
+    owner = db.Column(db.Integer, db.ForeignKey('usr.id'))
+
+class Chat(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    ownerName = db.Column(db.String(100), nullable=False)
+    content = db.Column(db.String(100), nullable=False)
+    post_date = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    ticket_id = db.Column(db.Integer, db.ForeignKey('ticket.id'))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     owner = db.Column(db.Integer, db.ForeignKey('usr.id'))
 
 

@@ -532,14 +532,22 @@ content %}
 
 <div class="bg-white rounded ticketInfo">
   <div class="rounded ticketInfoHeader">
-    <h3 class="mb-0 col-md-6" style="font-size: 20px;display: inline-block;">Ticket Info</h3>
-    <h3 class="mb-0 col-md-3" id="chatTitle" style="font-size: 20px;display: none;">Chat</h3>
+    <h3 class="mb-0 col-md-6" style="font-size: 20px; display: inline-block">
+      Ticket Info
+    </h3>
+    <h3
+      class="mb-0 col-md-3"
+      id="chatTitle"
+      style="font-size: 20px; display: none"
+    >
+      Chat
+    </h3>
   </div>
   <hr class="my-3" />
   <div id="ticketInfoPlaceholder">
     <span>No Ticket Selected</span>
   </div>
-  <div class="row" style="margin: 0px 10px 0px 10px;">
+  <div class="row" style="margin: 0px 10px 0px 10px">
     <div
       class="mt-3 col-xl-6"
       id="ticketInfoContent"
@@ -643,11 +651,32 @@ content %}
         </div>
       </div>
     </div>
-    <div class="mt-3 col-xl-6" id="chatContent" style="display: none;">
-      <div class="shadow p-4 card" style="height: 250px;">Hello there</div>
+    <div class="mt-3 col-xl-6" id="chatContent" style="display: none">
+      <div class="shadow p-4 card" style="height: 250px">
+        <div class="card-body" style="padding: 0px;">
+          <div class="row">
+            <div class="col">Name</div>
+            <div class="col">Date</div>
+            <div class="col">Content</div>
+          </div>
+        </div>
+        <div class="card-footer" style="padding-bottom: 0px;background-color: transparent;">
+          <div class="row">
+            <input
+              id="chatMsg"
+              name="chatMsg"
+              placeholder="Enter Comment"
+              type="text"
+              class="lease-form-input form-control"
+              style="width: 585px;"
+              value=""
+            />
+            <button class="btn btn-info">Comment</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  
 </div>
 
 <script
@@ -723,7 +752,6 @@ content %}
     document.getElementById("ticketInfoContent").style.display = "block";
     document.getElementById("chatContent").style.display = "block";
     document.getElementById("chatTitle").style.display = "inline-block";
-
   });
 
   $("#addNewTicketModal").click(() => {
