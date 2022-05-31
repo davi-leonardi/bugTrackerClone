@@ -1,8 +1,9 @@
 from flask import flash, redirect, render_template, Blueprint, request, url_for
 from flask_login import current_user, login_required
+from flask_socketio import join_room, leave_room
 import json
 
-from .models import Project, Ticket, Usr, association_table
+from .models import Project, Ticket, Usr, Chat, association_table
 from . import io, db
 
 views = Blueprint('views', __name__)
@@ -172,5 +173,24 @@ def handle_ticket_info(id):
     jsonData = json.dumps(data)
     io.emit('handleTicketInfo', jsonData, json=True)
 
+@io.on('joinChat')
+def join_chat(id):
+    join_room(id)
+    tck = Ticket.query.get(id)
+    print(tck.messages)
+    io.emit('loadChat', tck.messages)
 
-    
+@io.on('sendComment')
+def handle_comment(data):
+    commentOwner = Usr.query.get(data['owner'])
+    tck = Ticket.query.get(data['ticketID'])
+
+    if(len(data['content']) < 100 and commentOwner and tck):
+        new_chat = Chat(ownerName=commentOwner.full_name, content=data['content'], ticket_id=tck.id, project_id=tck.project_id, owner=commentOwner.id)
+        db.session.add(new_chat)
+        db.session.commit()
+        new_tck = Ticket.query.get(data['ticketID'])
+    else:
+        flash("Comment is too long!", category="error")
+
+    io.emit('loadChat', new_tck.messages, to=data['ticketID'])

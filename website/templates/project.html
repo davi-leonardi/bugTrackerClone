@@ -653,25 +653,31 @@ content %}
     </div>
     <div class="mt-3 col-xl-6" id="chatContent" style="display: none">
       <div class="shadow p-4 card" style="height: 250px">
-        <div class="card-body" style="padding: 0px;">
-          <div class="row">
+        <div class="card-body" id="chatBody" style="padding: 0px">
+          <!-- <div class="row" id>
             <div class="col">Name</div>
             <div class="col">Date</div>
             <div class="col">Content</div>
-          </div>
+          </div> -->
         </div>
-        <div class="card-footer" style="padding-bottom: 0px;background-color: transparent;">
+        <div
+          class="card-footer"
+          style="padding-bottom: 0px; background-color: transparent"
+        >
           <div class="row">
+            <input id="commentOwner" hidden value="{{current_user.id}}" />
             <input
-              id="chatMsg"
-              name="chatMsg"
+              id="commentContent"
+              name="commentContent"
               placeholder="Enter Comment"
               type="text"
               class="lease-form-input form-control"
-              style="width: 585px;"
+              style="width: 585px"
               value=""
             />
-            <button class="btn btn-info">Comment</button>
+            <button class="btn btn-info" type="button" id="commentButton">
+              Comment
+            </button>
           </div>
         </div>
       </div>
@@ -698,8 +704,9 @@ content %}
 ></script>
 <script type="text/javascript">
   var socket = io();
-  socket.on("displayTicketInfo");
+  current_ticket = 0;
   function displayTicketInfo(id) {
+    current_ticket = id;
     socket.emit("displayTicketInfo", id);
   }
 
@@ -752,6 +759,9 @@ content %}
     document.getElementById("ticketInfoContent").style.display = "block";
     document.getElementById("chatContent").style.display = "block";
     document.getElementById("chatTitle").style.display = "inline-block";
+
+    socket.emit("joinChat", current_ticket);
+
   });
 
   $("#addNewTicketModal").click(() => {
@@ -769,6 +779,39 @@ content %}
     $("#exampleModalLongTitle").html("Edit Ticket");
     $("#ticketModalButton").html("Submit");
   });
+
+  $("#commentButton").click(() => {
+
+    var commentBody = {
+      ticketID: current_ticket,
+      owner: $("#commentOwner").val(),
+      content: $("#commentContent").val() 
+    }
+
+    socket.emit("sendComment", commentBody);
+  })
+
+  socket.on("loadChat", (commentBody) => {
+
+    const d1 = document.createElement("div").classList.add('row');
+    const d2 = document.createElement("div").classList.add('col');
+    const d3 = document.createElement("div").classList.add('col');
+    const d4 = document.createElement("div").classList.add('col');
+
+    d1.appendChild(d2);
+    d1.appendChild(d3);
+    d1.appendChild(d4);
+
+    for(i in commentBody){
+      d2.appendChild(document.createTextNode(i.ownerName));
+      d3.appendChild(document.createTextNode(i.postDate));
+      d4.appendChild(document.createTextNode(i.content));
+      document.getElementById("chatBody").appendChild(d1);
+    } 
+
+  })
+
+
 </script>
 
 {% endblock %}
