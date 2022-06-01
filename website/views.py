@@ -173,12 +173,31 @@ def handle_ticket_info(id):
     jsonData = json.dumps(data)
     io.emit('handleTicketInfo', jsonData, json=True)
 
+def serializeChat(chat):
+    serializedData = {}
+    data = []
+
+    for i in chat:
+        serializedData = {
+            'id': i.id,
+            'name': i.ownerName,
+            'date': i.post_date.strftime("%b %d, %Y at %H:%M"),
+            'content': i.content
+        }
+
+        data.append(serializedData)
+
+    return data
+
 @io.on('joinChat')
-def join_chat(id):
+def join_chat(id, old_room):
+    print(old_room)
+    if(old_room != '0'):
+        leave_room(old_room)
+    
     join_room(id)
     tck = Ticket.query.get(id)
-    print(tck.messages)
-    io.emit('loadChat', tck.messages)
+    io.emit('loadChat', serializeChat(tck.messages))
 
 @io.on('sendComment')
 def handle_comment(data):
@@ -193,4 +212,4 @@ def handle_comment(data):
     else:
         flash("Comment is too long!", category="error")
 
-    io.emit('loadChat', new_tck.messages, to=data['ticketID'])
+    io.emit('loadChat', serializeChat(new_tck.messages), to=data['ticketID'])

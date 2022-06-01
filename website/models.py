@@ -1,3 +1,4 @@
+from enum import unique
 from select import select
 from flask_login import UserMixin
 from . import db, create_app
@@ -40,7 +41,7 @@ class Project(db.Model):
 
 class Chat(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    ownerName = db.Column(db.String(100), nullable=False)
+    ownerName = db.Column(db.String(100), unique=False, nullable=False)
     content = db.Column(db.String(100), nullable=False)
     post_date = db.Column(db.DateTime(timezone=True), server_default=func.now())
     ticket_id = db.Column(db.Integer, db.ForeignKey('ticket.id'))
