@@ -181,7 +181,7 @@ def serializeChat(chat):
         serializedData = {
             'id': i.id,
             'name': i.ownerName,
-            'date': i.post_date.strftime("%b %d, %Y at %H:%M"),
+            'date': i.post_date.strftime("%d/%m/%y at %H:%M"),
             'content': i.content
         }
 
@@ -191,13 +191,11 @@ def serializeChat(chat):
 
 @io.on('joinChat')
 def join_chat(id, old_room):
-    print(old_room)
-    if(old_room != '0'):
+    if(old_room != 0):
         leave_room(old_room)
-    
     join_room(id)
     tck = Ticket.query.get(id)
-    io.emit('loadChat', serializeChat(tck.messages))
+    io.emit('loadChat', serializeChat(tck.messages), to=id)
 
 @io.on('sendComment')
 def handle_comment(data):
@@ -213,3 +211,17 @@ def handle_comment(data):
         flash("Comment is too long!", category="error")
 
     io.emit('loadChat', serializeChat(new_tck.messages), to=data['ticketID'])
+
+@io.on('deleteComment')
+def deleteComment(tck_id, msg_id):
+
+    msgToDel = Chat.query.filter_by(id=msg_id).first()
+
+    if msgToDel:
+        db.session.delete(msgToDel)
+        db.session.commit()
+
+    tck = Ticket.query.get(tck_id)
+
+    io.emit('loadChat', serializeChat(tck.messages), to=tck_id)
+

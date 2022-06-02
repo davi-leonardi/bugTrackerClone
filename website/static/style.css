@@ -312,3 +312,23 @@ a:hover {
 #pencilEditIcon:hover{
   color: rgb(86, 85, 85);
 }
+
+.bi-trash{
+  size: 5px;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.bi-trash:hover{
+  color: red;
+}
+
+#deleteManagerWarning{
+  display: none;
+  color: red;
+  float: right;
+}
+
+#disabledCloseBtn:hover + #deleteManagerWarning{
+  display: block;
+}
