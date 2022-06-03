@@ -329,6 +329,6 @@ a:hover {
   float: right;
 }
 
-#disabledCloseBtn:hover + #deleteManagerWarning{
-  display: block;
+#disabledCloseBtn{
+  color: #b1b1b1;
 }

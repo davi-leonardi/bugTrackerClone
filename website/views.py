@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 from flask_socketio import join_room, leave_room
 import json
 
-from .models import Project, Ticket, Usr, Chat, association_table
+from .models import Project, Ticket, Usr, Chat, association_table, ticketDevTeam
 from . import io, db
 
 views = Blueprint('views', __name__)
@@ -73,7 +73,6 @@ def project(id):
 def addTeamMem(id):
     if request.method == 'POST':
         usersToBeAdded = request.form.getlist("team")
-        print(usersToBeAdded)
 
         for c in usersToBeAdded:
             team_member = Usr.query.get(int(c))
@@ -100,27 +99,46 @@ def deleteTeamMem(id):
 @login_required
 def addTicket(id):
     if request.method == 'POST':
+        tckid = request.form.get('tckToBeUpdated')
         name = request.form.get('ticketname')
         description = request.form.get('description')
         status = request.form.get('status')
         priority = request.form.get('priority')
         type = request.form.get('type')
+        devsTeam = request.form.getlist('devsTeam')
         owner = current_user.id
 
-        tck = Ticket.query.filter_by(name=name).first()
+        tck = Ticket.query.filter_by(id=tckid).first()
 
-        if tck:
-            flash("A ticket with the same name already exists!", category="error")
-        else:
-            if(len(name) > 40 or len(name) < 2):
+        if(len(name) > 40 or len(name) < 2):
                 flash("Invalid name", category="error")
-            elif(len(description) > 500):
+        elif(len(description) > 500):
                 flash("Description is too long!", category="error")
+        else:
+            if tck:
+                print("TCK ENTERED")
+                tck.name = name
+                tck.description = description
+                tck.status = status
+                tck.priority = priority
+                tck.type = type
+                tck.project_id = id
+                tck.owner = owner
+
+                db.session.execute('DELETE FROM "ticketDevTeam" WHERE ticket_id = :val', {'val': tckid})
+                db.session.commit()
+                flash("Ticket has been updated!", category="success")
             else:
-                new_tck = Ticket(name=name, description=description, status=status, priority=priority, type=type, project_id=id, owner=owner)
-                db.session.add(new_tck)
+                print("TCK ELSE")
+                tck = Ticket(name=name, description=description, status=status, priority=priority, type=type, project_id=id, owner=owner)
+                db.session.add(tck)
                 db.session.commit()
                 flash("Ticket has been created!", category="success")
+
+            for c in devsTeam:
+                team_member = Usr.query.get(int(c))
+                team_member.ticketTeam.append(tck)
+                db.session.commit()
 
     return redirect(url_for("views.project", id=id))
 
@@ -160,14 +178,20 @@ def handle_message(data):
 def handle_ticket_info(id):
     tck = Ticket.query.get(id)
     tckOwner = Usr.query.get(tck.owner)
+    jsonDevs = []
+
+    for t in tck.devs:
+        jsonDevs.append(str(t.full_name))
 
     data = {
+    'tckid' : id,    
     'tckName' : tck.name,
     'tckDesc' : tck.description,
     'tckStatus' : tck.status,
     'tckPriority' : tck.priority,
     'tckType' : tck.type,
-    'tckAuthor' : tckOwner.full_name
+    'tckAuthor' : tckOwner.full_name,
+    'tckDevs' : jsonDevs
     }
 
     jsonData = json.dumps(data)
@@ -224,4 +248,3 @@ def deleteComment(tck_id, msg_id):
     tck = Ticket.query.get(tck_id)
 
     io.emit('loadChat', serializeChat(tck.messages), to=tck_id)
-

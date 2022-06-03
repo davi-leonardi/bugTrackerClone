@@ -9,6 +9,21 @@ association_table = db.Table('association_table',
     db.Column('usr_id',db.Integer, db.ForeignKey('usr.id'), primary_key=True)
 )
 
+ticketDevTeam = db.Table('ticketDevTeam',
+    db.Column('ticket_id',db.Integer, db.ForeignKey('ticket.id'), primary_key=True),
+    db.Column('usr_id',db.Integer, db.ForeignKey('usr.id'), primary_key=True)
+)
+
+class Usr(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    full_name = db.Column(db.String(150), unique=True, nullable=False)
+    email = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=False)
+    projects = db.relationship('Project', secondary=association_table, lazy='subquery', backref=db.backref('usrs', lazy=True))
+    ticketTeam = db.relationship('Ticket', secondary=ticketDevTeam, lazy='subquery', backref=db.backref('devs', lazy=True))
+    tickets = db.relationship('Ticket')
+    messages = db.relationship('Chat')
+
 class Ticket(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), unique=True, nullable=False)
@@ -18,15 +33,6 @@ class Ticket(db.Model):
     type = db.Column(db.String(150), nullable=False)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     owner = db.Column(db.Integer, db.ForeignKey('usr.id'))
-    messages = db.relationship('Chat')
-
-class Usr(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    full_name = db.Column(db.String(150), unique=True, nullable=False)
-    email = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=False)
-    projects = db.relationship('Project', secondary=association_table, lazy='subquery', backref=db.backref('usrs', lazy=True))
-    tickets = db.relationship('Ticket')
     messages = db.relationship('Chat')
 
 class Project(db.Model):

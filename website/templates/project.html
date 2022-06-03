@@ -190,6 +190,13 @@ content %}
       </div>
       <div class="modal-body">
         <form action="/project/{{this_project.id}}/addTicket" method="POST">
+          <input
+            id="tckToBeUpdated"
+            name="tckToBeUpdated"
+            type="text"
+            hidden
+            value=""
+          />
           <div class="formrow">
             <div class="form-group">
               <label for="ticketname" class="lease-form-label mandatory-entry"
@@ -247,6 +254,23 @@ content %}
                   <option>Communication Error</option>
                   <option>Deployment Error</option>
                   <option>New feature</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label for="devsTeam" class="">Assign Devs</label>
+                <select
+                  multiple
+                  name="devsTeam"
+                  id="devsTeam"
+                  class="form-control"
+                >
+                  {% for t in this_project.usrs %}
+                  <option value="{{t.id}}">{{t.full_name}}</option>
+                  {% endfor %}
                 </select>
               </div>
             </div>
@@ -349,30 +373,40 @@ content %}
                   />
                   {% if m.id == this_project.owner %}
                   <button
-                    type="submit"
+                    type="button"
                     class="btn-close"
                     id="disabledCloseBtn"
-                    name="disabledCloseBtn"
-                    disabled
                     aria-label="Close"
                   >
-                    {% else %}
-                    <button type="submit" class="btn-close" aria-label="Close">
-                      {% endif %}
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        class="bi bi-x-lg"
-                        viewBox="0 0 16 16"
-                      >
-                        <path
-                          d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"
-                        />
-                      </svg>
-                    </button>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-x-lg"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"
+                      />
+                    </svg>
                   </button>
+                  {% else %}
+                  <button type="submit" class="btn-close" aria-label="Close">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-x-lg"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"
+                      />
+                    </svg>
+                  </button>
+                  {% endif %}
                 </form>
               </td>
             </tr>
@@ -558,6 +592,7 @@ content %}
     >
       <div class="shadow p-4 card" style="height: 250px">
         <div class="mb-2 row">
+          <p id="tckticketId" hidden></p>
           <div class="col-md-3">
             <h6 class="text-muted text-uppercase">Ticket Name</h6>
             <h2
@@ -600,6 +635,32 @@ content %}
             ></p>
           </div>
           <div class="col-md-3">
+            <h6 class="text-muted text-uppercase">Devs Assigned</h6>
+            <span
+              id="tckDevsAssigned"
+              name="tckDevsAssigned"
+              style="max-height: 100px; overflow: hidden"
+            ></span>
+          </div>
+        </div>
+        <div class="mb-2 row">
+          <div class="col-3 col-sm-3 col-md-3">
+            <h6 class="text-muted text-uppercase">Status</h6>
+            <span id="tckStatus" name="tckStatus"></span>
+          </div>
+          <div class="col-3 col-sm-3 col-md-3">
+            <h6 class="text-muted text-uppercase">Priority</h6>
+            <span id="tckPriority" name="tckPriority"></span>
+          </div>
+          <div class="col-3 col-sm-3 col-md-3">
+            <h6 class="text-muted text-uppercase">Type</h6>
+            <span
+              class="mr-1 mb-2 badge badge-primary badge-pill"
+              id="tckType"
+              name="tckType"
+            ></span>
+          </div>
+          <div class="col-md-3">
             <h6 class="text-muted text-uppercase"></h6>
             <button
               type="button"
@@ -628,28 +689,6 @@ content %}
               </i>
               Edit...
             </button>
-          </div>
-        </div>
-        <div class="mb-2 row">
-          <div class="col-3 col-sm-3 col-md-3">
-            <h6 class="text-muted text-uppercase">Status</h6>
-            <span id="tckStatus" name="tckStatus"></span>
-          </div>
-          <div class="col-3 col-sm-3 col-md-3">
-            <h6 class="text-muted text-uppercase">Priority</h6>
-            <span id="tckPriority" name="tckPriority"></span>
-          </div>
-          <div class="col-3 col-sm-3 col-md-3">
-            <h6 class="text-muted text-uppercase">Type</h6>
-            <span
-              class="mr-1 mb-2 badge badge-primary badge-pill"
-              id="tckType"
-              name="tckType"
-            ></span>
-          </div>
-          <div class="col-md-3">
-            <h6 class="text-muted text-uppercase">Time Estimate (Hours)</h6>
-            <span>2</span>
           </div>
         </div>
       </div>
@@ -704,10 +743,13 @@ content %}
   crossorigin="anonymous"
 ></script>
 <script type="text/javascript">
+  $("#disabledCloseBtn").mouseenter(function () {
+    $("#deleteManagerWarning").css("display", "block");
+  });
 
-  // $("#disabledCloseBtn").hover(function(){
-  //   $("#deleteManagerWarning").css("display", "block");
-  // });
+  $("#disabledCloseBtn").mouseleave(function () {
+    $("#deleteManagerWarning").css("display", "none");
+  });
 
   var socket = io();
   current_ticket = 0;
@@ -720,10 +762,14 @@ content %}
 
   socket.on("handleTicketInfo", (data) => {
     ticket = JSON.parse(data);
+    var devsAssigned = ticket.tckDevs.join(", ");
+
+    $("#tckticketId").html(ticket.tckid);
     $("#tckName").html(ticket.tckName);
     $("#author").html(ticket.tckAuthor);
     $("#desc").html(ticket.tckDesc);
     $("#tckDesc").html(ticket.tckDesc);
+    $("#tckDevsAssigned").html(devsAssigned);
 
     switch (ticket.tckStatus) {
       case "Open":
@@ -780,6 +826,7 @@ content %}
   });
 
   $("#editTicketModal").click(() => {
+    $("#tckToBeUpdated").val($("#tckticketId").text());
     $("#ticketname").val($("#tckName").text());
     $("#description").html($("#tckDesc").text());
 
@@ -817,8 +864,9 @@ content %}
       const trashBin = document.createElement("div");
       trashBin.classList.add("col-md-auto");
       var trashBinButton = document.createElement("button");
-      trashBinButton.classList.add("bi-trash")
-      trashBinButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>'
+      trashBinButton.classList.add("bi-trash");
+      trashBinButton.innerHTML =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>';
 
       d1.appendChild(d2);
       d1.appendChild(d3);
@@ -832,12 +880,15 @@ content %}
 
       document.getElementById("chatBody").appendChild(d1);
       trashBinButton.value = commentBody[i]["id"];
-      trashBinButton.onclick = function(){socket.emit("deleteComment", tck_id=current_ticket, msg_id=this.value)};
+      trashBinButton.onclick = function () {
+        socket.emit(
+          "deleteComment",
+          (tck_id = current_ticket),
+          (msg_id = this.value)
+        );
+      };
     }
   });
-
 </script>
 
 {% endblock %}
-
-
