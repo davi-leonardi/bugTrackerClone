@@ -40,7 +40,7 @@ class Project(db.Model):
     name = db.Column(db.String(150), unique=True, nullable=False)
     description = db.Column(db.String(1000))
     creation_date = db.Column(db.DateTime(timezone=True), server_default=func.now())
-    status = db.Column(db.Boolean, nullable=False)
+    status = db.Column(db.String(20), nullable=False)
     tickets = db.relationship('Ticket')
     messages = db.relationship('Chat')
     owner = db.Column(db.Integer, db.ForeignKey('usr.id'))

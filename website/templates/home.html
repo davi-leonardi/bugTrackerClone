@@ -134,11 +134,11 @@
         <td>
           <div class="row">
             <span>
-              {% if p.status == True %}
+              {% if p.status == "Open" %}
               <span class="dot" style="background-color: green"></span>
-              In-Progress {% else %}
+              Open {% else %}
               <span class="dot" style="background-color: red"></span>
-              Completed {% endif %}
+              Closed {% endif %}
             </span>
           </div>
         </td>

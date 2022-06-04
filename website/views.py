@@ -28,7 +28,7 @@ def home():
             elif(len(description) > 100):
                 flash("Description is too long!", category="error")
             else:
-                new_prj = Project(name=name, description=description, owner=owner, status=True)
+                new_prj = Project(name=name, description=description, owner=owner, status="Open")
                 db.session.add(new_prj)
 
                 for c in contributors:
@@ -67,6 +67,43 @@ def project(id):
         numOfTickets += 1
     
     return render_template("project.html", this_project=this_project, usernames=users, freeUsers=freeUsers, numOfTickets=numOfTickets)
+
+@views.route('/project/<int:id>/updateProj', methods=['GET', 'POST'])
+@login_required
+def update_proj(id):
+    if request.method == 'POST':
+        name = request.form.get('pname')
+        description = request.form.get('pdescription')
+        status = request.form.get('pstatus')
+
+        if(len(name) > 30 or len(name) < 2):
+            flash("Invalid name", category="error")
+        elif(len(description) > 100):
+            flash("Description is too long!", category="error")
+        else:
+            proj = Project.query.filter_by(id=id).first()
+            print(proj.name)
+            print(name)
+            proj.name = name
+            proj.description = description
+            proj.status = status
+            db.session.commit()
+
+            flash("Project updated!", category="success")
+    
+    return redirect(url_for("views.project", id=id))
+
+@views.route('/project/<int:id>/deleteProj')
+@login_required
+def deleteProj(id):
+    prj = Project.query.get(id)
+
+    if prj:
+        db.session.delete(prj)
+        db.session.commit()
+        flash("Project deleted", category="success")
+
+    return redirect("/") 
 
 @views.route('/project/<int:id>/addTeamMem', methods=['POST', 'GET'])
 @login_required
@@ -116,7 +153,6 @@ def addTicket(id):
                 flash("Description is too long!", category="error")
         else:
             if tck:
-                print("TCK ENTERED")
                 tck.name = name
                 tck.description = description
                 tck.status = status
@@ -129,7 +165,6 @@ def addTicket(id):
                 db.session.commit()
                 flash("Ticket has been updated!", category="success")
             else:
-                print("TCK ELSE")
                 tck = Ticket(name=name, description=description, status=status, priority=priority, type=type, project_id=id, owner=owner)
                 db.session.add(tck)
                 db.session.commit()

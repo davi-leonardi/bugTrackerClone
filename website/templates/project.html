@@ -6,6 +6,117 @@ content %}
 </div>
 
 <div
+  class="modal fade"
+  id="editProjModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="editProjModalTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Edit Project</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/project/{{this_project.id}}/updateProj" method="POST">
+          <div class="formrow">
+            <div class="form-group">
+              <label for="pname" class="lease-form-label mandatory-entry"
+                >Project Name</label
+              >
+              <input
+                id="pname"
+                name="pname"
+                placeholder="Enter project name"
+                type="text"
+                class="lease-form-input form-control"
+                value="{{this_project.name}}"
+              />
+            </div>
+          </div>
+          <div class="formrow">
+            <div class="form-group">
+              <label for="pdescription" class="">Project Description</label>
+              <textarea
+                name="pdescription"
+                id="pdescription"
+                placeholder="Enter description"
+                rows="5"
+                class="form-control"
+              >
+{{this_project.description}}</textarea
+              >
+            </div>
+          </div>
+          <div class="formrow">
+            <div class="form-group">
+              <label for="pstatus" class="">Change status</label>
+              <select name="pstatus" id="pstatus" class="form-control">
+                <option value="">Open</option>
+                <option value="">Closed</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="col" style="padding: 0px">
+              <a href="/project/{{this_project.id}}/deleteProj">
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  id="deleteProjButton"
+                >
+                  Delete project
+                </button>
+              </a>
+            </div>
+            <button type="submit" class="btn btn-success">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="editProjButton">
+  <button
+    type="button"
+    class="btn btn-warning"
+    id="editProjectButton"
+    data-toggle="modal"
+    data-target="#editProjModal"
+  >
+    <i class="bi bi-pencil-square">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-pencil-square"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+        />
+        <path
+          fill-rule="evenodd"
+          d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+        />
+      </svg>
+    </i>
+    Edit Project
+  </button>
+</div>
+
+<div
   class="modal"
   id="descModal"
   tabindex="-1"
@@ -754,6 +865,7 @@ content %}
   var socket = io();
   current_ticket = 0;
   old_room = 0;
+
   function displayTicketInfo(id) {
     old_room = current_ticket;
     current_ticket = id;
