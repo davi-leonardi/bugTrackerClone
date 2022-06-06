@@ -1,10 +1,6 @@
 {% extends "base.html" %} {% block title %}Project{% endblock %} {% block
 content %}
 
-<div id="userLogged">
-  <span>Logged as: <strong>{{current_user.full_name}}</strong></span>
-</div>
-
 <div
   class="modal fade"
   id="editProjModal"
@@ -289,7 +285,7 @@ content %}
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+        <h5 class="modal-title" id="ticketModalTitleDisplay"></h5>
         <button
           type="button"
           class="close"
@@ -930,6 +926,7 @@ content %}
   });
 
   $("#addNewTicketModal").click(() => {
+    $("#ticketModalTitleDisplay").html("Create New Ticket");
     $("#description").html("");
     $("#ticketname").val("");
 
@@ -938,6 +935,7 @@ content %}
   });
 
   $("#editTicketModal").click(() => {
+    $("#ticketModalTitleDisplay").html("Edit Ticket");
     $("#tckToBeUpdated").val($("#tckticketId").text());
     $("#ticketname").val($("#tckName").text());
     $("#description").html($("#tckDesc").text());

@@ -1,0 +1,154 @@
+{% extends "base.html" %} {% block title %}Tickets{% endblock %} {% block
+content %}
+
+<div id="pageTitle">Tickets</div>
+<div class="container-fluid">
+  <div class="bg-white rounded ticketsdiv">
+    <div class="shadow card">
+      <div class="card-header">
+        <div class="align-items-center row">
+          <div class="col">
+            <h3 class="mb-0" style="font-size: 20px">List of Tickets</h3>
+          </div>
+          <div class="col">
+            <div class="col text-right">
+              <button
+                type="button"
+                style="font-size: 15px"
+                class="btn btn-success"
+                id="addNewTicketModal"
+                data-toggle="modal"
+                data-target="#ticketModal"
+              >
+                New Ticket
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="table-responsive" style="height: 675px">
+        <table class="align-items-center table-flush table">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">Ticket Title</th>
+              <th scope="col">Project Name</th>
+              <th scope="col">Description</th>
+              <th scope="col">Ticket Author</th>
+              <th scope="col">Priority</th>
+              <th scope="col">Type</th>
+              <th scope="col">Status</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for t in tickets %}
+            <tr>
+              <th scope="row">
+                <div class="media">
+                  <span style="color: #79589f">{{t.name}}</span>
+                </div>
+              </th>
+              <td>
+                <div class="row" style="padding-left: 20px">
+                  {% for p in projects %}{% if p.id == t.project_id %}
+                  <span>{{p.name}}</span>
+                  {% endif %}{% endfor %}
+                </div>
+              </td>
+              <td
+                style="
+                  white-space: unset;
+                  overflow-wrap: break-word;
+                  max-width: 20px;
+                "
+              >
+                <span>{{t.description}}</span>
+              </td>
+              <td>
+                <div class="row" style="padding-left: 20px">
+                  {% for u in usernames %} {% if u.id == t.owner %}
+                  <span>{{u.full_name}}</span>
+                  {% endif %}{% endfor %}
+                </div>
+              </td>
+              <td>
+                {% if t.priority == 'Low' %}
+                <span class="badge rounded-pill bg-success text-white"
+                  >Low</span
+                >
+                {% elif t.priotity == 'Medium' %}
+                <span class="badge rounded-pill bg-warning text-dark"
+                  >Medium</span
+                >
+                {% else %}
+                <span class="badge rounded-pill bg-danger text-white"
+                  >High</span
+                >
+                {% endif %}
+              </td>
+              <td>
+                <span class="mr-1 mb-2 badge badge-primary badge-pill"
+                  >{{t.type}}</span
+                >
+              </td>
+              <td>
+                <div class="row" style="padding-left: 20px">
+                  <span>
+                    {% if t.status == 'Open' %}
+                    <span class="dot" style="background-color: green"></span>
+                    Open {% elif t.status == 'In-Progress' %}
+                    <span
+                      class="dot"
+                      style="background-color: rgb(0, 106, 212)"
+                    ></span>
+                    In-Progress {% elif t.status == 'Closed' %}
+                    <span class="dot" style="background-color: red"></span>
+                    Closed {% endif %}
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div class="dropdown">
+                  <span
+                    class="bi bi-three-dots-vertical"
+                    id="dropdown-tickets"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-three-dots-vertical"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"
+                      />
+                    </svg>
+                    </span>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Go To Project</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#">Delete Project</a></li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer">
+        <span>
+          Number of Tickets:
+          <strong>{{numOfTickets}}</strong>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  {% endblock %}
+</div>

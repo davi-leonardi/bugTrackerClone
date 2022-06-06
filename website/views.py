@@ -99,6 +99,15 @@ def deleteProj(id):
     prj = Project.query.get(id)
 
     if prj:
+
+        db.session.execute('DELETE FROM association_table WHERE project_id = :val', {'val': id})
+        
+        for m in prj.messages:
+            db.session.delete(m)
+
+        for t in prj.tickets:
+            db.session.delete(t)
+
         db.session.delete(prj)
         db.session.commit()
         flash("Project deleted", category="success")
@@ -145,14 +154,13 @@ def addTicket(id):
         devsTeam = request.form.getlist('devsTeam')
         owner = current_user.id
 
-        tck = Ticket.query.filter_by(id=tckid).first()
-
         if(len(name) > 40 or len(name) < 2):
                 flash("Invalid name", category="error")
         elif(len(description) > 500):
                 flash("Description is too long!", category="error")
         else:
-            if tck:
+            if tckid != "":
+                tck = Ticket.query.filter_by(id=tckid).first()
                 tck.name = name
                 tck.description = description
                 tck.status = status
@@ -184,6 +192,11 @@ def deleteTicket(id):
         tckToDelete = request.form.get("tckId")
         tck = Ticket.query.filter_by(id=tckToDelete).first()
         if tck:
+            db.session.execute('DELETE FROM "ticketDevTeam" WHERE ticket_id = :val', {'val': tckToDelete})
+
+            for t in tck.messages:
+                db.session.delete(t)
+
             db.session.delete(tck)
             db.session.commit()
             flash("Ticket deleted!", category="success")
@@ -203,6 +216,17 @@ def updateProjMan(id):
             flash("Project Manager Changed!", category="success")
     
     return redirect(url_for("views.project", id=id))
+
+@views.route('/tickets', methods=['GET', 'POST'])
+@login_required
+def display_tickets():
+
+    usernames = Usr.query.all()
+    tickets = Ticket.query.all()
+    numOfTickets = Ticket.query.count()
+    allProjects = Project.query.all()
+
+    return render_template("tickets.html", tickets=tickets, usernames=usernames, projects=allProjects, numOfTickets=numOfTickets)
 
 @io.on('userConnected')
 def handle_message(data):

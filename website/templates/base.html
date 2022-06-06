@@ -28,6 +28,11 @@
   </head>
 
   <body style="background-color: #563d7c">
+
+    <div id="userLogged">
+      <span>Logged as: <strong>{{current_user.full_name}}</strong></span>
+    </div>
+
     <div class="bg-light rounded sidenav">
       <img
         class="navbar-brand-img"
@@ -58,7 +63,7 @@
         </i>
         Dashboard
       </a>
-      <a href="#">
+      <a href="/tickets">
         <i class="bi bi-ticket">
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -186,6 +186,13 @@ a:hover {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
+.ticketsdiv{
+  position: fixed;
+  left: 320px;
+  width: 82%;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
 .ticketInfo{
   position: fixed;
   left: 320px;
