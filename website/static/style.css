@@ -108,6 +108,11 @@ a:hover {
   color: #563d7c;
 }  
 
+#inputSearch:focus-within{
+  border: 1px solid green !important;
+  box-shadow: 0 0 8px green !important;
+}
+
 .form-control:focus-within,
 .form-control:focus{
   border:1px solid #563d7c; 

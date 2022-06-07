@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block title %}Tickets{% endblock %} {% block
 content %}
 
-<div id="pageTitle">Tickets</div>
+<div id="pageTitle">TICKETS</div>
 <div class="container-fluid">
   <div class="bg-white rounded ticketsdiv">
     <div class="shadow card">
@@ -12,16 +12,22 @@ content %}
           </div>
           <div class="col">
             <div class="col text-right">
-              <button
-                type="button"
-                style="font-size: 15px"
-                class="btn btn-success"
-                id="addNewTicketModal"
-                data-toggle="modal"
-                data-target="#ticketModal"
-              >
-                New Ticket
-              </button>
+              <div class="form-inline my-2 my-lg-0" style="float: right">
+                <input
+                  class="form-control mr-sm-2"
+                  id="inputSearch"
+                  type="search"
+                  placeholder="Search"
+                  aria-label="Search"
+                />
+                <button
+                  class="btn btn-outline-success my-2 my-sm-0"
+                  type="button"
+                  onclick="filterFunc()"
+                >
+                  Search
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -42,10 +48,10 @@ content %}
           </thead>
           <tbody>
             {% for t in tickets %}
-            <tr>
-              <th scope="row">
+            <tr class="ticketRow">
+              <th class="tckRow1" scope="row">
                 <div class="media">
-                  <span style="color: #79589f">{{t.name}}</span>
+                  <span class="ticketName" style="color: #79589f">{{t.name}}</span>
                 </div>
               </th>
               <td>
@@ -61,6 +67,7 @@ content %}
                   overflow-wrap: break-word;
                   max-width: 20px;
                 "
+                scope="row"
               >
                 <span>{{t.description}}</span>
               </td>
@@ -71,7 +78,7 @@ content %}
                   {% endif %}{% endfor %}
                 </div>
               </td>
-              <td>
+              <td scope="row">
                 {% if t.priority == 'Low' %}
                 <span class="badge rounded-pill bg-success text-white"
                   >Low</span
@@ -87,9 +94,9 @@ content %}
                 {% endif %}
               </td>
               <td>
-                <span class="mr-1 mb-2 badge badge-primary badge-pill"
-                  >{{t.type}}</span
-                >
+                <div class="mr-1 mb-2 badge badge-primary badge-pill">
+                  {{t.type}}
+                </div>
               </td>
               <td>
                 <div class="row" style="padding-left: 20px">
@@ -108,33 +115,30 @@ content %}
                 </div>
               </td>
               <td>
-                <div class="dropdown">
-                  <span
-                    class="bi bi-three-dots-vertical"
-                    id="dropdown-tickets"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
+                <a
+                  class="bi bi-box-arrow-up-right fa-sm"
+                  id="tickets-redirect"
+                  style="color: #79589f"
+                  href="/project/{{t.project_id}}"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    fill="currentColor"
+                    class="bi bi-box-arrow-up-right"
+                    viewBox="0 0 16 16"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      class="bi bi-three-dots-vertical"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"
-                      />
-                    </svg>
-                    </span>
-                  <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Go To Project</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Delete Project</a></li>
-                  </ul>
-                </div>
+                    <path
+                      fill-rule="evenodd"
+                      d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"
+                    />
+                    <path
+                      fill-rule="evenodd"
+                      d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"
+                    />
+                  </svg>
+                </a>
               </td>
             </tr>
             {% endfor %}
@@ -149,6 +153,28 @@ content %}
       </div>
     </div>
   </div>
-
-  {% endblock %}
 </div>
+
+<script type="text/javascript">
+  function filterFunc(){
+    var input, filter, tckRow, name, x, txtValue;
+    input = document.getElementById("inputSearch");
+    filter = input.value.toUpperCase();
+    tbody = document.getElementsByTagName("tbody");
+    tckRow = document.getElementsByClassName("ticketRow");
+    name = tbody.getElementsByClassName("ticketRow").getElementsByClassName("tckRow1").getElementsByClassName("media");
+
+    for (var i = 0; i < tckRow.length; i++){
+      x = name[i].getElementsByClassName("ticketName")[0];
+      txtValue = x.textContent || x.innerText;
+
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tckRow[i].style.display = "";
+      } else {
+        tckRow[i].style.display = "none";
+      } 
+    }
+  }
+</script>
+
+{% endblock %}
