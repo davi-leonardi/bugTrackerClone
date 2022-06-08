@@ -41,10 +41,14 @@ def home():
 
     return render_template("home.html", usernames=Usr.query.all(), projects=Project.query.all(), user=current_user)
 
-@views.route('/projects')
+@views.route('/employees')
 @login_required
 def projects():
-    pass
+
+    employees = Usr.query.all()
+    numOfEmployees = Usr.query.count()
+
+    return render_template("employees.html", employees=employees, numOfEmployees=numOfEmployees)
 
 @views.route('/project/<int:id>')
 @login_required

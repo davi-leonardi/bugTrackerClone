@@ -1,0 +1,261 @@
+{% extends "base.html" %} {% block title %}Employees{% endblock %} {% block
+content %}
+
+<div
+  class="modal fade"
+  id="editEmpModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="editEmpModalTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content" style="height: 600px;">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Employee</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/employees/updateEmp" method="POST">
+          <div class="formrow">
+            <div class="form-group">
+              <label for="ename" class="lease-form-label"
+                >Employee Name</label
+              >
+              <input
+                id="ename"
+                name="ename"
+                placeholder="Enter employee name"
+                type="text"
+                class="lease-form-input form-control"
+                value=""
+              />
+            </div>
+          </div>
+          <div class="formrow">
+            <div class="form-group">
+              <label for="eemail" class="lease-form-label">Email</label>
+              <input
+                name="eemail"
+                id="eemail"
+                placeholder="Enter email"
+                type="email"
+                class="lease-form-input form-control"
+                value=""
+              >
+            </div>
+          </div>
+          <div class="formrow">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="changePassword">
+              <label class="form-check-label" for="changePassword">
+                Change password?
+              </label>
+            </div>
+          </div>
+          <div class="formrow" id="passwordChangeToggle" style="visibility: hidden;">
+            <div class="form-group">
+              <label for="epassword" class="lease-form-label mandatory-entry">New Password</label>
+              <input
+              name="enpassword"
+              id="enpassword"
+              placeholder="Enter new password"
+              type="password"
+              class="lease-form-input form-control"
+              >
+            </div>
+          </div>
+          <div class="formrow">
+            <div class="form-group">
+              <label for="epassword" class="lease-form-label mandatory-entry">Current Password</label>
+              <input
+              name="epassword"
+              id="epassword"
+              placeholder="Enter current password"
+              type="password"
+              class="lease-form-input form-control"
+              >
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="col" style="padding: 0px">
+              <a href="#">
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  id="deleteEmpButton"
+                >
+                  Delete Employee
+                </button>
+              </a>
+            </div>
+            <button type="submit" class="btn btn-success">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="pageTitle">EMPLOYEES</div>
+<div class="container-fluid">
+  <div class="bg-white rounded ticketsdiv">
+    <div class="shadow card">
+      <div class="card-header">
+        <div class="align-items-center row">
+          <div class="col">
+            <h3 class="mb-0" style="font-size: 20px">List of Employees</h3>
+          </div>
+          <div class="col">
+            <div class="col text-right">
+              <div class="form-inline my-2 my-lg-0" style="float: right">
+                <input
+                  class="form-control mr-sm-2"
+                  id="inputSearch"
+                  type="search"
+                  placeholder="Search Name"
+                  aria-label="Search"
+                />
+                <button
+                  class="btn btn-outline-success my-2 my-sm-0"
+                  type="button"
+                  onclick="filterFunc()"
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="table-responsive" style="height: 675px">
+        <table class="align-items-center table-flush table" style="overflow-x: hidden">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">Employee Number</th>
+              <th scope="col">Employee Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Registration Date</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for e in employees %}
+            <tr class="employeeRow">
+              <th class="empRow1" scope="row">
+                <div class="media">
+                  <span class="employeeId" style="color: #79589f"
+                    >{{e.id}}</span
+                  >
+                </div>
+              </th>
+              <td>
+                <div class="row" style="padding-left: 20px">
+                  <span class="employeeName">{{e.full_name}}</span>
+                </div>
+              </td>
+              <td
+                scope="row"
+              >
+                <span>{{e.email}}</span>
+              </td>
+              <td>
+                <div class="row" style="padding-left: 15px; max-width: 300px;">
+                  <span style="color: gray;">{{e.creation_date.strftime("%B %d, %Y at %H:%M")}}</span>
+                </div>
+              </td>
+              {% if e.id == current_user.id%}
+              <td>
+                <div id="editEmpButton">
+                  <button
+                    type="button"
+                    class="btn btn-warning"
+                    id="editEmpButton"
+                    data-toggle="modal"
+                    data-target="#editEmpModal"
+                  >
+                    <i class="bi bi-pencil-square">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-pencil-square"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                        />
+                      </svg>
+                    </i>
+                    Edit
+                  </button>
+              </td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer">
+        <span>
+          Number of Employees:
+          <strong>{{numOfEmployees}}</strong>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script
+  src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+  integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+  crossorigin="anonymous"
+></script>
+
+<script type="text/javascript">
+  function filterFunc() {
+    var input, filter, empRow, x, txtValue;
+    input = document.getElementById("inputSearch");
+    filter = input.value.toUpperCase();
+    empRow = document.getElementsByClassName("employeeRow");
+    data = document.getElementsByClassName("employeeName");
+
+    for (var i = 0; i < data.length; i++) {
+      x = data[i];
+      txtValue = x.textContent || x.innerText;
+
+      if (txtValue.toUpperCase().startsWith(filter)) {
+        empRow[i].style.display = "";
+      } else {
+        empRow[i].style.display = "none";
+      }
+    }
+  }
+
+  // $('#changePassword').click(function() {
+  //   $("#passwordChangeToggle").toggle(this.checked);
+  // });
+
+    $("#changePassword").click(function (){
+      if($("#changePassword").is(":checked")){
+        document.getElementById("passwordChangeToggle").style.visibility = "";
+      }else{
+        document.getElementById("passwordChangeToggle").style.visibility = "hidden";
+      }
+    });
+
+</script>
+
+{% endblock %}

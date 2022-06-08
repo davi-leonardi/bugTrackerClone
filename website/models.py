@@ -19,6 +19,7 @@ class Usr(db.Model, UserMixin):
     full_name = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
+    creation_date = db.Column(db.DateTime(timezone=True), server_default=func.now())
     projects = db.relationship('Project', secondary=association_table, lazy='subquery', backref=db.backref('usrs', lazy=True))
     ticketTeam = db.relationship('Ticket', secondary=ticketDevTeam, lazy='subquery', backref=db.backref('devs', lazy=True))
     tickets = db.relationship('Ticket')

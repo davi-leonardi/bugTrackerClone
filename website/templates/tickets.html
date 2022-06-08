@@ -83,7 +83,7 @@ content %}
                 <span class="badge rounded-pill bg-success text-white"
                   >Low</span
                 >
-                {% elif t.priotity == 'Medium' %}
+                {% elif t.priority == 'Medium' %}
                 <span class="badge rounded-pill bg-warning text-dark"
                   >Medium</span
                 >
@@ -157,18 +157,17 @@ content %}
 
 <script type="text/javascript">
   function filterFunc(){
-    var input, filter, tckRow, name, x, txtValue;
+    var input, filter, tckRow, x, txtValue;
     input = document.getElementById("inputSearch");
     filter = input.value.toUpperCase();
-    tbody = document.getElementsByTagName("tbody");
     tckRow = document.getElementsByClassName("ticketRow");
-    name = tbody.getElementsByClassName("ticketRow").getElementsByClassName("tckRow1").getElementsByClassName("media");
+    data = document.getElementsByClassName("ticketName");
 
-    for (var i = 0; i < tckRow.length; i++){
-      x = name[i].getElementsByClassName("ticketName")[0];
+    for (var i = 0; i < data.length; i++){
+      x = data[i];
       txtValue = x.textContent || x.innerText;
 
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      if(txtValue.toUpperCase().startsWith(filter)){
         tckRow[i].style.display = "";
       } else {
         tckRow[i].style.display = "none";
