@@ -51,8 +51,8 @@ def register():
                 flash("Invalid email length, it should be <30 chars", category="error")
             elif (password1 != password2):
                 flash("Passwords do not match!", category="error")
-            elif (len(password1) < 8 or len(password1) > 20):
-                flash("Invalid password length, it should be between 8 - 20 chars", category="error")
+            elif (len(password1) < 6 or len(password1) > 20):
+                flash("Invalid password length, it should be between 6 - 20 chars", category="error")
             else:
                 new_user = Usr(full_name = name, email = email, password = generate_password_hash(password1, method='sha256'))
                 db.session.add(new_user)

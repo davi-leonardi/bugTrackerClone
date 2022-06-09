@@ -24,6 +24,7 @@ content %}
       </div>
       <div class="modal-body">
         <form action="/employees/updateEmp" method="POST">
+          <input id="eid" name="eid" hidden value="{{current_user.id}}">
           <div class="formrow">
             <div class="form-group">
               <label for="ename" class="lease-form-label"
@@ -35,7 +36,7 @@ content %}
                 placeholder="Enter employee name"
                 type="text"
                 class="lease-form-input form-control"
-                value=""
+                value="{{current_user.full_name}}"
               />
             </div>
           </div>
@@ -48,13 +49,13 @@ content %}
                 placeholder="Enter email"
                 type="email"
                 class="lease-form-input form-control"
-                value=""
+                value="{{current_user.email}}"
               >
             </div>
           </div>
           <div class="formrow">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="changePassword">
+              <input class="form-check-input" type="checkbox" value="true" id="changePassword" name="changePassword">
               <label class="form-check-label" for="changePassword">
                 Change password?
               </label>
@@ -62,7 +63,7 @@ content %}
           </div>
           <div class="formrow" id="passwordChangeToggle" style="visibility: hidden;">
             <div class="form-group">
-              <label for="epassword" class="lease-form-label mandatory-entry">New Password</label>
+              <label for="enpassword" class="lease-form-label mandatory-entry">New Password</label>
               <input
               name="enpassword"
               id="enpassword"

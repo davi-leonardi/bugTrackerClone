@@ -1,6 +1,8 @@
+import re
 from flask import flash, redirect, render_template, Blueprint, request, url_for
 from flask_login import current_user, login_required
 from flask_socketio import join_room, leave_room
+from werkzeug.security import check_password_hash, generate_password_hash
 import json
 
 from .models import Project, Ticket, Usr, Chat, association_table, ticketDevTeam
@@ -43,12 +45,49 @@ def home():
 
 @views.route('/employees')
 @login_required
-def projects():
+def employees():
 
     employees = Usr.query.all()
     numOfEmployees = Usr.query.count()
 
     return render_template("employees.html", employees=employees, numOfEmployees=numOfEmployees)
+
+@views.route('/employees/updateEmp', methods=['POST'])
+@login_required
+def updateEmp():
+
+    if request.method == 'POST':
+        id = request.form.get("eid")
+        name = request.form.get("ename")
+        email = request.form.get("eemail")
+        password = request.form.get("epassword")
+        checkbox = request.form.get("changePassword")
+
+        if(check_password_hash(current_user.password, password)):
+            user = Usr.query.get(id)
+            
+            if not re.match("^[A-Za-z]+[ ][A-Za-z]+$", str(name)):
+                flash("Invalid name", category="error") 
+            elif (len(name) > 30):
+                flash("Invalid name length, it should be under <30 chars", category="error")
+            elif not re.match("^[0-9a-z._]+[@][a-z]+\.[A-Za-z]+$", str(email)):
+                flash("Invalid email", category="error")
+            elif(len(email) > 30):
+                flash("Invalid email length, it should be <30 chars", category="error")
+            elif (len(password) < 6 or len(password) > 20):
+                flash("Invalid password length, it should be between 6 - 20 chars", category="error")
+            else:
+                user.full_name = name
+                user.email = email
+
+                if(checkbox == 'true'):
+                    newPassword = request.form.get("enpassword")
+                    user.password = generate_password_hash(newPassword, method='sha256')
+                
+                db.session.commit()
+                flash("User updated!", category="success")
+
+    return redirect(url_for("views.employees"))
 
 @views.route('/project/<int:id>')
 @login_required
