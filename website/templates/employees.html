@@ -10,7 +10,7 @@ content %}
   aria-hidden="true"
 >
   <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content" style="height: 600px;">
+    <div class="modal-content" style="height: 600px">
       <div class="modal-header">
         <h5 class="modal-title">Edit Employee</h5>
         <button
@@ -24,12 +24,10 @@ content %}
       </div>
       <div class="modal-body">
         <form action="/employees/updateEmp" method="POST">
-          <input id="eid" name="eid" hidden value="{{current_user.id}}">
+          <input id="eid" name="eid" hidden value="{{current_user.id}}" />
           <div class="formrow">
             <div class="form-group">
-              <label for="ename" class="lease-form-label"
-                >Employee Name</label
-              >
+              <label for="ename" class="lease-form-label">Employee Name</label>
               <input
                 id="ename"
                 name="ename"
@@ -50,44 +48,58 @@ content %}
                 type="email"
                 class="lease-form-input form-control"
                 value="{{current_user.email}}"
-              >
+              />
             </div>
           </div>
           <div class="formrow">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="true" id="changePassword" name="changePassword">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="true"
+                id="changePassword"
+                name="changePassword"
+              />
               <label class="form-check-label" for="changePassword">
                 Change password?
               </label>
             </div>
           </div>
-          <div class="formrow" id="passwordChangeToggle" style="visibility: hidden;">
+          <div
+            class="formrow"
+            id="passwordChangeToggle"
+            style="visibility: hidden"
+          >
             <div class="form-group">
-              <label for="enpassword" class="lease-form-label mandatory-entry">New Password</label>
-              <input
-              name="enpassword"
-              id="enpassword"
-              placeholder="Enter new password"
-              type="password"
-              class="lease-form-input form-control"
+              <label for="enpassword" class="lease-form-label mandatory-entry"
+                >New Password</label
               >
+              <input
+                name="enpassword"
+                id="enpassword"
+                placeholder="Enter new password"
+                type="password"
+                class="lease-form-input form-control"
+              />
             </div>
           </div>
           <div class="formrow">
             <div class="form-group">
-              <label for="epassword" class="lease-form-label mandatory-entry">Current Password</label>
-              <input
-              name="epassword"
-              id="epassword"
-              placeholder="Enter current password"
-              type="password"
-              class="lease-form-input form-control"
+              <label for="epassword" class="lease-form-label mandatory-entry"
+                >Current Password</label
               >
+              <input
+                name="epassword"
+                id="epassword"
+                placeholder="Enter current password"
+                type="password"
+                class="lease-form-input form-control"
+              />
             </div>
           </div>
           <div class="modal-footer">
             <div class="col" style="padding: 0px">
-              <a href="#">
+              <a href="/employees/deleteUser">
                 <button
                   type="button"
                   class="btn btn-danger"
@@ -137,7 +149,10 @@ content %}
         </div>
       </div>
       <div class="table-responsive" style="height: 675px">
-        <table class="align-items-center table-flush table" style="overflow-x: hidden">
+        <table
+          class="align-items-center table-flush table"
+          style="overflow-x: hidden"
+        >
           <thead class="thead-light">
             <tr>
               <th scope="col">Employee Number</th>
@@ -162,18 +177,18 @@ content %}
                   <span class="employeeName">{{e.full_name}}</span>
                 </div>
               </td>
-              <td
-                scope="row"
-              >
+              <td scope="row">
                 <span>{{e.email}}</span>
               </td>
               <td>
-                <div class="row" style="padding-left: 15px; max-width: 300px;">
-                  <span style="color: gray;">{{e.creation_date.strftime("%B %d, %Y at %H:%M")}}</span>
+                <div class="row" style="padding-left: 15px; max-width: 300px">
+                  <span style="color: gray"
+                    >{{e.creation_date.strftime("%B %d, %Y at %H:%M")}}</span
+                  >
                 </div>
               </td>
-              {% if e.id == current_user.id%}
               <td>
+                {% if e.id == current_user.id%}
                 <div id="editEmpButton">
                   <button
                     type="button"
@@ -202,8 +217,9 @@ content %}
                     </i>
                     Edit
                   </button>
+                </div>
+                {% endif %}
               </td>
-              {% endif %}
             </tr>
             {% endfor %}
           </tbody>
@@ -249,14 +265,14 @@ content %}
   //   $("#passwordChangeToggle").toggle(this.checked);
   // });
 
-    $("#changePassword").click(function (){
-      if($("#changePassword").is(":checked")){
-        document.getElementById("passwordChangeToggle").style.visibility = "";
-      }else{
-        document.getElementById("passwordChangeToggle").style.visibility = "hidden";
-      }
-    });
-
+  $("#changePassword").click(function () {
+    if ($("#changePassword").is(":checked")) {
+      document.getElementById("passwordChangeToggle").style.visibility = "";
+    } else {
+      document.getElementById("passwordChangeToggle").style.visibility =
+        "hidden";
+    }
+  });
 </script>
 
 {% endblock %}

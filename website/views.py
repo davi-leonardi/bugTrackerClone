@@ -1,6 +1,6 @@
 import re
 from flask import flash, redirect, render_template, Blueprint, request, url_for
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required, logout_user
 from flask_socketio import join_room, leave_room
 from werkzeug.security import check_password_hash, generate_password_hash
 import json
@@ -88,6 +88,42 @@ def updateEmp():
                 flash("User updated!", category="success")
 
     return redirect(url_for("views.employees"))
+
+@views.route('/employees/deleteUser')
+@login_required
+def deleteUser():
+
+    id = current_user.id
+    user = Usr.query.get(id)
+    prjs = Project.query.all()
+
+    if user:
+
+        for p in prjs:
+            if(p.owner == id):
+                for mes in p.messages:
+                    db.session.delete(mes)
+
+                for tic in p.tickets:
+                    db.session.delete(tic)
+
+                db.session.delete(p) 
+
+        db.session.commit()
+
+        db.session.execute('DELETE FROM "ticketDevTeam" WHERE usr_id = :val', {'val': id})
+        db.session.commit()
+        
+        db.session.execute('DELETE FROM association_table WHERE usr_id = :val', {'val': id})
+        db.session.commit()
+            
+        db.session.delete(user)
+        db.session.commit()
+        logout_user()
+
+        flash("User account deleted", category="success")
+    
+    return redirect(url_for('auth.login'))
 
 @views.route('/project/<int:id>')
 @login_required
