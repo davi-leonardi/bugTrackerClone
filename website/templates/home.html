@@ -144,21 +144,167 @@
   </table>
 </div>
 
-<script
-  src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
-  integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
-  crossorigin="anonymous"
-></script>
-<script type="text/javascript" charset="utf-8">
-  var socket = io();
-  socket.on("connect", () => {
-    //called when the socket is connected
-    socket.emit("userConnected", { username: "Davi Leonardi" });
-  });
+<!-- The following charts were built with sample data (only for demonstration) -->
+<div class="bg-white rounded graph1">
+    <canvas id="myChart1"></canvas>
+</div>
+<div class="bg-white rounded graph2">
+    <canvas id="myChart2"></canvas>
+</div>
+<div class="bg-white rounded graph3">
+  <canvas id="myChart3"></canvas>
+</div>
 
-  socket.on("message", (data) => {
-    console.log(data);
-  });
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const labels1 = [
+    'Low',
+    'Medium',
+    'High',
+  ];
+
+const labels2 = [
+  'January',
+  'February',
+  'March',
+  'April', 
+  'May', 
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+];
+
+
+  const data1 = {
+    labels: labels1,
+    datasets: [{
+      label: 'My First dataset',
+      backgroundColor:[ 
+      'rgba(75, 192, 192)',
+      'rgba(255, 205, 86)',
+      'rgba(255, 99, 132)'],
+      data: [20, 10, 5]
+    }]
+  };
+
+  const data2 = {
+  labels: labels2,
+  datasets: [{
+    label: 'Number of tickets',
+    data: [26, 35, 40, 15, 26, 51, 24, 31, 18, 22, 30, 19],
+    backgroundColor: [
+      'rgba(255, 99, 132, 0.2)',
+      'rgba(255, 159, 64, 0.2)',
+      'rgba(255, 205, 86, 0.2)',
+      'rgba(75, 192, 192, 0.2)',
+      'rgba(54, 162, 235, 0.2)',
+      'rgba(153, 102, 255, 0.2)',
+      'rgba(201, 203, 207, 0.2)'
+    ],
+    borderColor: [
+      'rgb(255, 99, 132)',
+      'rgb(255, 159, 64)',
+      'rgb(255, 205, 86)',
+      'rgb(75, 192, 192)',
+      'rgb(54, 162, 235)',
+      'rgb(153, 102, 255)',
+      'rgb(201, 203, 207)'
+    ],
+    borderWidth: 1
+  }]
+};
+
+  const config1 = {
+    type: 'pie',
+    data: data1,
+    options: {
+      plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Ticket Priorities'
+      }}
+    }
+  };
+
+  const config2 = {
+  type: 'bar',
+  data: data2,
+  options: {
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Tickets created by month'
+      }},
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  },
+};
+
+const data3 = {
+  labels: [
+    'Functionality Error',
+    'Communication Error',
+    'Deployment Error',
+    'New feature',
+    'Bug'
+  ],
+  datasets: [{
+    label: 'Ticket types',
+    data: [15, 10, 8, 4, 20],
+    backgroundColor: [
+      'rgb(255, 99, 132)',
+      'rgb(255, 159, 64)',
+      'rgb(255, 205, 86)',
+      'rgb(75, 192, 192)',
+      'rgb(54, 162, 235)',
+    ],
+    hoverOffset: 4
+  }]
+};
+
+const config3 = {
+  type: 'doughnut',
+  data: data3,
+  options: {
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Ticket types'
+      }}
+    }
+};
+
+  const myChart1 = new Chart(
+    document.getElementById('myChart1'),
+    config1
+  );
+
+  const myChart2 = new Chart(
+    document.getElementById('myChart2'),
+    config2
+  );
+
+  const myChart3 = new Chart(
+    document.getElementById('myChart3'),
+    config3
+  );
+
 </script>
 
 {% endblock %}
