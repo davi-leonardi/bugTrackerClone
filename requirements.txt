@@ -18,6 +18,7 @@ Jinja2==3.1.2
 jmespath==1.0.0
 MarkupSafe==2.1.1
 psycopg2==2.9.3
+python==3.9.7
 python-dateutil==2.8.2
 python-dotenv==0.20.0
 python-engineio==4.3.2
