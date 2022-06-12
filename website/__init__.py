@@ -11,8 +11,8 @@ load_dotenv()
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+    app.config['SECRET_KEY'] = '87adt976tcnm9wa67tmgc9d67a768cd87dcam5'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1977Clauwind_@localhost:5432/postgres'
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     io.init_app(app)
     db.init_app(app)
