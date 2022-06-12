@@ -1,15 +1,18 @@
+import os
 from flask import Flask
 from flask_socketio import SocketIO
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from dotenv import load_dotenv
 
 io = SocketIO()
 db = SQLAlchemy()
+load_dotenv()
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'fas54f2afsd45asd5f421asfd54af45'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1977Clauwind_@localhost:5432/postgres'
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     io.init_app(app)
     db.init_app(app)
