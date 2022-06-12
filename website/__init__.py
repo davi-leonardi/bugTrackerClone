@@ -3,16 +3,16 @@ from flask import Flask
 from flask_socketio import SocketIO
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 io = SocketIO()
 db = SQLAlchemy()
-load_dotenv()
+# load_dotenv()
 
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = '87adt976tcnm9wa67tmgc9d67a768cd87dcam5'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1977Clauwind_@localhost:5432/postgres'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://ouxquxqjdgydar:e0f22aab3a7862282d867c1d5248f69b77258de1342fb25928129110db1b8b65@ec2-54-204-56-171.compute-1.amazonaws.com:5432/ddesv7r08d3oh6'
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     io.init_app(app)
     db.init_app(app)
