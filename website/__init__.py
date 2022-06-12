@@ -3,11 +3,9 @@ from flask import Flask
 from flask_socketio import SocketIO
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
-# from dotenv import load_dotenv
 
 io = SocketIO()
 db = SQLAlchemy()
-# load_dotenv()
 
 def create_app():
     app = Flask(__name__)
