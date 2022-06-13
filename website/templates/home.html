@@ -74,82 +74,92 @@
   </div>
 </div>
 
-<div class="bg-white rounded mainnav">
-  <div class="border-0 card-header">
-    <div class="ml-2 align-items-center row">
-      <h4 class="mb-0">Projects</h4>
-      <div class="col text-right">
-        <button
-          type="button"
-          class="btn btn-success"
-          id="newPrj"
-          data-toggle="modal"
-          data-target="#NewPrjModal"
-        >
-          New Project
-        </button>
+<div class="container-fluid">
+  <div class="bg-white rounded mainnav">
+    <div class="shadow card">
+      <div class="border-0 card-header">
+        <div class="ml-2 align-items-center row">
+          <h4 class="mb-0">Projects</h4>
+          <div class="col text-right">
+            <button
+              type="button"
+              class="btn btn-success"
+              id="newPrj"
+              data-toggle="modal"
+              data-target="#NewPrjModal"
+            >
+              New Project
+            </button>
+          </div>
+        </div>
       </div>
+
+      <table class="align-items-center table-flush table">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">Project</th>
+            <th scope="col">Description</th>
+            <th scope="col">Manager</th>
+            <th scope="col">Creation date</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in projects %}
+          <tr>
+            <th scope="row">
+              <a href="/project/{{p.id}}">
+                <div class="media">
+                  <span>{{p.name}}</span>
+                </div>
+              </a>
+            </th>
+            <td
+              style="
+                width: 500px;
+                white-space: unset;
+                overflow-wrap: break-word;
+              "
+            >
+              <span>{{p.description}}</span>
+            </td>
+            <td>
+              <div class="row" style="padding-left: 20px">
+                {% for x in usernames%}{% if x.id == p.owner %}
+                <span>{{x.full_name}}</span>
+                {% endif %}{% endfor %}
+              </div>
+            </td>
+            <td>
+              <div class="row" style="padding-left: 20px">
+                <span>{{p.creation_date.strftime("%b %d, %Y at %H:%M")}}</span>
+              </div>
+            </td>
+            <td>
+              <div class="row" style="padding-left: 20px">
+                <span>
+                  {% if p.status == "Open" %}
+                  <span class="dot" style="background-color: green"></span>
+                  Open {% else %}
+                  <span class="dot" style="background-color: red"></span>
+                  Closed {% endif %}
+                </span>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
-
-  <table class="align-items-center table-flush table">
-    <thead class="thead-light">
-      <tr>
-        <th scope="col">Project</th>
-        <th scope="col">Description</th>
-        <th scope="col">Manager</th>
-        <th scope="col">Creation date</th>
-        <th scope="col">Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for p in projects %}
-      <tr>
-        <th scope="row">
-          <a href="/project/{{p.id}}">
-            <div class="media">
-              <span>{{p.name}}</span>
-            </div>
-          </a>
-        </th>
-        <td style="white-space: unset; overflow-wrap: break-word">
-          <span>{{p.description}}</span>
-        </td>
-        <td>
-          <div class="row">
-            {% for x in usernames%}{% if x.id == p.owner %}
-            <span>{{x.full_name}}</span>
-            {% endif %}{% endfor %}
-          </div>
-        </td>
-        <td>
-          <div class="row">
-            <span>{{p.creation_date.strftime("%b %d, %Y at %H:%M")}}</span>
-          </div>
-        </td>
-        <td>
-          <div class="row">
-            <span>
-              {% if p.status == "Open" %}
-              <span class="dot" style="background-color: green"></span>
-              Open {% else %}
-              <span class="dot" style="background-color: red"></span>
-              Closed {% endif %}
-            </span>
-          </div>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
 </div>
 
 <!-- The following charts were built with sample data (only for demonstration) -->
 <div class="bg-white rounded graph1">
-    <canvas id="myChart1"></canvas>
+  <canvas id="myChart1"></canvas>
 </div>
 <div class="bg-white rounded graph2">
-    <canvas id="myChart2"></canvas>
+  <canvas id="myChart2"></canvas>
 </div>
 <div class="bg-white rounded graph3">
   <canvas id="myChart3"></canvas>
@@ -157,154 +167,149 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-const labels1 = [
-    'Low',
-    'Medium',
-    'High',
+  const labels1 = ["Low", "Medium", "High"];
+
+  const labels2 = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
-
-const labels2 = [
-  'January',
-  'February',
-  'March',
-  'April', 
-  'May', 
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December'
-];
-
 
   const data1 = {
     labels: labels1,
-    datasets: [{
-      label: 'My First dataset',
-      backgroundColor:[ 
-      'rgba(75, 192, 192)',
-      'rgba(255, 205, 86)',
-      'rgba(255, 99, 132)'],
-      data: [20, 10, 5]
-    }]
+    datasets: [
+      {
+        label: "My First dataset",
+        backgroundColor: [
+          "rgba(75, 192, 192)",
+          "rgba(255, 205, 86)",
+          "rgba(255, 99, 132)",
+        ],
+        data: [20, 10, 5],
+      },
+    ],
   };
 
   const data2 = {
-  labels: labels2,
-  datasets: [{
-    label: 'Number of tickets',
-    data: [26, 35, 40, 15, 26, 51, 24, 31, 18, 22, 30, 19],
-    backgroundColor: [
-      'rgba(255, 99, 132, 0.2)',
-      'rgba(255, 159, 64, 0.2)',
-      'rgba(255, 205, 86, 0.2)',
-      'rgba(75, 192, 192, 0.2)',
-      'rgba(54, 162, 235, 0.2)',
-      'rgba(153, 102, 255, 0.2)',
-      'rgba(201, 203, 207, 0.2)'
+    labels: labels2,
+    datasets: [
+      {
+        label: "Number of tickets",
+        data: [26, 35, 40, 15, 26, 51, 24, 31, 18, 22, 30, 19],
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(255, 159, 64, 0.2)",
+          "rgba(255, 205, 86, 0.2)",
+          "rgba(75, 192, 192, 0.2)",
+          "rgba(54, 162, 235, 0.2)",
+          "rgba(153, 102, 255, 0.2)",
+          "rgba(201, 203, 207, 0.2)",
+        ],
+        borderColor: [
+          "rgb(255, 99, 132)",
+          "rgb(255, 159, 64)",
+          "rgb(255, 205, 86)",
+          "rgb(75, 192, 192)",
+          "rgb(54, 162, 235)",
+          "rgb(153, 102, 255)",
+          "rgb(201, 203, 207)",
+        ],
+        borderWidth: 1,
+      },
     ],
-    borderColor: [
-      'rgb(255, 99, 132)',
-      'rgb(255, 159, 64)',
-      'rgb(255, 205, 86)',
-      'rgb(75, 192, 192)',
-      'rgb(54, 162, 235)',
-      'rgb(153, 102, 255)',
-      'rgb(201, 203, 207)'
-    ],
-    borderWidth: 1
-  }]
-};
+  };
 
   const config1 = {
-    type: 'pie',
+    type: "pie",
     data: data1,
     options: {
       plugins: {
-      legend: {
-        position: 'top',
+        legend: {
+          position: "top",
+        },
+        title: {
+          display: true,
+          text: "Ticket Priorities",
+        },
       },
-      title: {
-        display: true,
-        text: 'Ticket Priorities'
-      }}
-    }
+    },
   };
 
   const config2 = {
-  type: 'bar',
-  data: data2,
-  options: {
-    plugins: {
-      legend: {
-        position: 'top',
+    type: "bar",
+    data: data2,
+    options: {
+      plugins: {
+        legend: {
+          position: "top",
+        },
+        title: {
+          display: true,
+          text: "Tickets created by month",
+        },
       },
-      title: {
-        display: true,
-        text: 'Tickets created by month'
-      }},
-    scales: {
-      y: {
-        beginAtZero: true
-      }
-    }
-  },
-};
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+  };
 
-const data3 = {
-  labels: [
-    'Functionality Error',
-    'Communication Error',
-    'Deployment Error',
-    'New feature',
-    'Bug'
-  ],
-  datasets: [{
-    label: 'Ticket types',
-    data: [15, 10, 8, 4, 20],
-    backgroundColor: [
-      'rgb(255, 99, 132)',
-      'rgb(255, 159, 64)',
-      'rgb(255, 205, 86)',
-      'rgb(75, 192, 192)',
-      'rgb(54, 162, 235)',
+  const data3 = {
+    labels: [
+      "Functionality Error",
+      "Communication Error",
+      "Deployment Error",
+      "New feature",
+      "Bug",
     ],
-    hoverOffset: 4
-  }]
-};
-
-const config3 = {
-  type: 'doughnut',
-  data: data3,
-  options: {
-    plugins: {
-      legend: {
-        position: 'top',
+    datasets: [
+      {
+        label: "Ticket types",
+        data: [15, 10, 8, 4, 20],
+        backgroundColor: [
+          "rgb(255, 99, 132)",
+          "rgb(255, 159, 64)",
+          "rgb(255, 205, 86)",
+          "rgb(75, 192, 192)",
+          "rgb(54, 162, 235)",
+        ],
+        hoverOffset: 4,
       },
-      title: {
-        display: true,
-        text: 'Ticket types'
-      }}
-    }
-};
+    ],
+  };
 
-  const myChart1 = new Chart(
-    document.getElementById('myChart1'),
-    config1
-  );
+  const config3 = {
+    type: "doughnut",
+    data: data3,
+    options: {
+      plugins: {
+        legend: {
+          position: "top",
+        },
+        title: {
+          display: true,
+          text: "Ticket types",
+        },
+      },
+    },
+  };
 
-  const myChart2 = new Chart(
-    document.getElementById('myChart2'),
-    config2
-  );
+  const myChart1 = new Chart(document.getElementById("myChart1"), config1);
 
-  const myChart3 = new Chart(
-    document.getElementById('myChart3'),
-    config3
-  );
+  const myChart2 = new Chart(document.getElementById("myChart2"), config2);
 
+  const myChart3 = new Chart(document.getElementById("myChart3"), config3);
 </script>
 
 {% endblock %}

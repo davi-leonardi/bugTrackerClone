@@ -27,7 +27,7 @@ def home():
         else:
             if(len(name) > 30 or len(name) < 2):
                 flash("Invalid name", category="error")
-            elif(len(description) > 100):
+            elif(len(description) > 500):
                 flash("Description is too long!", category="error")
             else:
                 new_prj = Project(name=name, description=description, owner=owner, status="Open")
@@ -157,7 +157,7 @@ def update_proj(id):
 
         if(len(name) > 30 or len(name) < 2):
             flash("Invalid name", category="error")
-        elif(len(description) > 100):
+        elif(len(description) > 500):
             flash("Description is too long!", category="error")
         else:
             proj = Project.query.filter_by(id=id).first()
