@@ -1,5 +1,7 @@
 from website import create_app, io
 
+#psycopg2==2.9.3
+
 app = create_app()
 
 if __name__ == '__main__':
