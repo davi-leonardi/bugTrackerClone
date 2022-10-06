@@ -2,7 +2,7 @@
 
 https://bugtrackerclone-production.up.railway.app/
 
-This is a bug tracker with authentication and a real-time chat. Developed with Python, Flask and Postgres. Deployed on Heroku (migrated to Railway).
+This is a bug tracker with authentication and a real-time chat. Developed with Python, Flask and Postgres (ORM: SQLAlchemy). Deployed on Heroku (migrated to Railway).
 
 The real-time chat was implemented with socket.io.
 
