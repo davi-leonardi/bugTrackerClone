@@ -6,7 +6,7 @@ This is a bug tracker with authentication and a real-time chat. Developed with P
 
 The real-time chat was implemented with socket.io.
 
-=> **This web app was created from scratch**.
+=> **This web app was created from scratch.**
 
 => **When I developed this website I mistakenly neglected the different screen sizes. Please zoom-out for better visualization (if necessary).**
 
