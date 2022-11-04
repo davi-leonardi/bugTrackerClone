@@ -11,7 +11,7 @@ The real-time chat was implemented with socket.io.
 => **When I developed this website I mistakenly neglected the different screen sizes. Please zoom-out for better visualization (if necessary).**
 
 https://bugtrackerclone-production.up.railway.app/
-.
+
 ## Login Page
 ![Capturar](https://user-images.githubusercontent.com/77506762/193058178-586e92e0-e723-42fd-a09a-62840c9fbae4.PNG)
 
